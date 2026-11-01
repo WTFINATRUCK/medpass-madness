@@ -1,1 +1,404 @@
-PLACEHOLDER_TOO_LARGE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>MedPass Madness</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8px;
+  }
+  #app {
+    width: 100%;
+    max-width: 440px;
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    min-height: 95vh;
+  }
+  header {
+    background: linear-gradient(90deg, #0ea5e9, #0284c7);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 700; }
+  .stats { display: flex; gap: 14px; font-size: 0.9rem; font-weight: 600; }
+  .timer { font-size: 1.4rem; }
+  .timer.warning { color: #fbbf24; }
+  .timer.danger { color: #fca5a5; animation: pulse 0.5s infinite; }
+  @keyframes pulse { 50% { opacity: 0.6; } }
+  .scene {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+  }
+  .scene img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .overlay-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 12px 16px 10px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .panel { background: #1e293b; padding: 16px; }
+  .resident-card {
+    background: #334155;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .resident-card img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #22c55e;
+  }
+  .med-needed {
+    background: #1e3a8a;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-weight: 600;
+  }
+  .meds-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .med-option {
+    background: #475569;
+    border: 2px solid #64748b;
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .med-option.correct { background: #166534; border-color: #22c55e; }
+  .med-option.wrong { background: #7f1d1d; border-color: #ef4444; }
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    background: #0ea5e9;
+    color: white;
+  }
+  .btn-success { background: #22c55e; }
+  .feedback {
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 8px 0;
+    font-weight: 600;
+  }
+  .feedback.good { background: #14532d; }
+  .feedback.bad { background: #7f1d1d; }
+  .start-screen { text-align: center; padding: 30px 16px; }
+  .start-screen img { width: 100%; border-radius: 12px; margin-bottom: 12px; }
+  .progress { height: 6px; background: #334155; border-radius: 3px; margin: 8px 0 12px; }
+  .progress-fill { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>💊 MedPass Madness</h1>
+    <div class="stats">
+      <span>Score: <span id="score">0</span></span>
+      <span class="timer" id="timer">150</span>
+    </div>
+  </header>
+  <div id="content"></div>
+</div>
+<script>
+const BASE = "https://raw.githubusercontent.com/WTFINATRUCK/medpass-madness/main/assets/";
+const hallwayImg = BASE + "hallway.jpg";
+const doorImg = BASE + "door.jpg";
+const givingImg = BASE + "giving.jpg";
+const res1Img = BASE + "res1.jpg";
+const res2Img = BASE + "res2.jpg";
+
+const residents = [
+  { name: "Mrs. Eleanor Hayes", room: "204", age: 78, allergy: "Penicillin", needed: "Metformin 500mg PO", correct: "Metformin 500mg",
+    options: ["Metformin 500mg", "Metformin 1000mg", "Glipizide 5mg", "Lisinopril 10mg"], portrait: res1Img },
+  { name: "Mr. James Whitaker", room: "207", age: 82, allergy: "None", needed: "Warfarin 2mg PO", correct: "Warfarin 2mg",
+    options: ["Warfarin 2mg", "Warfarin 5mg", "Aspirin 81mg", "Eliquis 5mg"], portrait: res2Img },
+  { name: "Mrs. Doris Chen", room: "211", age: 85, allergy: "Sulfa", needed: "Atorvastatin 20mg PO", correct: "Atorvastatin 20mg",
+    options: ["Atorvastatin 20mg", "Atorvastatin 40mg", "Simvastatin 20mg", "Amlodipine 5mg"], portrait: res1Img },
+  { name: "Mr. Robert Miller", room: "218", age: 76, allergy: "Codeine", needed: "Lisinopril 10mg PO", correct: "Lisinopril 10mg",
+    options: ["Lisinopril 10mg", "Lisinopril 20mg", "Losartan 50mg", "Metoprolol 25mg"], portrait: res2Img },
+  { name: "Mrs. Betty Thompson", room: "222", age: 88, allergy: "None", needed: "Furosemide 20mg PO", correct: "Furosemide 20mg",
+    options: ["Furosemide 20mg", "Furosemide 40mg", "Hydrochlorothiazide 25mg", "Spironolactone 25mg"], portrait: res1Img },
+  { name: "Mr. Frank Davis", room: "225", age: 79, allergy: "Aspirin", needed: "Omeprazole 20mg PO", correct: "Omeprazole 20mg",
+    options: ["Omeprazole 20mg", "Omeprazole 40mg", "Pantoprazole 40mg", "Aspirin 81mg"], portrait: res2Img }
+];
+
+let currentIndex = 0, score = 0, streak = 0, timeLeft = 150, timerInterval = null, gameActive = false, musicPlaying = false;
+const timerEl = document.getElementById('timer');
+const scoreEl = document.getElementById('score');
+const contentEl = document.getElementById('content');
+
+let audioCtx;
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function beep(type = 'good') {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = type === 'good' ? 880 : (type === 'step' ? 180 : 220);
+    gain.gain.value = 0.08;
+    osc.start(); osc.stop(audioCtx.currentTime + (type === 'step' ? 0.08 : 0.15));
+  } catch(e) {}
+}
+
+function playChiptune() {
+  if (musicPlaying) return;
+  musicPlaying = true;
+  try {
+    initAudio();
+    const notes = [523, 659, 784, 659, 523, 392, 523, 392];
+    let i = 0;
+    function next() {
+      if (!gameActive && !musicPlaying) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.type = 'square';
+      osc.frequency.value = notes[i % notes.length];
+      gain.gain.value = 0.04;
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.18);
+      i++;
+      if (gameActive || musicPlaying) setTimeout(next, 220);
+    }
+    next();
+  } catch(e) {}
+}
+
+function updateScore(delta) {
+  score = Math.max(0, score + delta);
+  scoreEl.textContent = score;
+}
+
+function startGame() {
+  currentIndex = 0; score = 0; streak = 0; timeLeft = 150; gameActive = true;
+  scoreEl.textContent = 0;
+  initAudio();
+  playChiptune();
+  startTimer();
+  walkToNext();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    timerEl.className = 'timer';
+    if (timeLeft <= 30) timerEl.classList.add('danger');
+    else if (timeLeft <= 60) timerEl.classList.add('warning');
+    if (timeLeft <= 0) endGame();
+  }, 1000);
+}
+
+function walkToNext() {
+  if (currentIndex >= residents.length) { endGame(true); return; }
+  const r = residents[currentIndex];
+  beep('step');
+  contentEl.innerHTML = `
+    <div class="scene">
+      <img src="${hallwayImg}" alt="Hallway">
+      <div class="overlay-text">Walking to Room ${r.room}…</div>
+    </div>
+  `;
+  setTimeout(() => arriveAtDoor(r), 1800);
+}
+
+function arriveAtDoor(r) {
+  beep('step');
+  contentEl.innerHTML = `
+    <div class="scene">
+      <img src="${doorImg}" alt="Door">
+      <div class="overlay-text">${r.name} — Room ${r.room}<br>Entering…</div>
+    </div>
+  `;
+  setTimeout(() => showResident(r), 1500);
+}
+
+function showResident(r) {
+  const progress = (currentIndex / residents.length) * 100;
+  contentEl.innerHTML = `
+    <div class="progress"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="scene">
+      <img src="${givingImg}" alt="With resident">
+      <div class="overlay-text">With ${r.name}</div>
+    </div>
+    <div class="panel">
+      <div class="resident-card">
+        <img src="${r.portrait}" alt="${r.name}">
+        <div>
+          <div style="font-weight:700;">${r.name}</div>
+          <div style="font-size:0.82rem; color:#94a3b8;">Room ${r.room} • Age ${r.age}</div>
+          <div style="font-size:0.82rem; color:#fca5a5;">${r.allergy !== 'None' ? '⚠️ Allergy: ' + r.allergy : 'No known allergies'}</div>
+        </div>
+      </div>
+      <div class="med-needed">Order: ${r.needed}</div>
+      <div class="meds-grid" id="meds"></div>
+      <div style="text-align:center; font-size:0.9rem; color:#cbd5e1;">Resident ${currentIndex + 1} of ${residents.length} ${streak > 1 ? '🔥 ' + streak + ' streak' : ''}</div>
+    </div>
+  `;
+  const grid = document.getElementById('meds');
+  r.options.forEach(label => {
+    const btn = document.createElement('div');
+    btn.className = 'med-option';
+    btn.textContent = label;
+    btn.onclick = () => selectMed(label, btn, r);
+    grid.appendChild(btn);
+  });
+}
+
+function selectMed(label, btn, r) {
+  if (!gameActive) return;
+  document.querySelectorAll('.med-option').forEach(el => el.onclick = null);
+  if (label === r.correct) {
+    btn.classList.add('correct');
+    beep('good');
+    showFeedback('Correct med!', true);
+    setTimeout(() => showRights(r), 600);
+  } else {
+    btn.classList.add('wrong');
+    beep('bad');
+    streak = 0;
+    updateScore(-75);
+    showFeedback('Wrong medication! −75', false);
+    setTimeout(() => { currentIndex++; walkToNext(); }, 1100);
+  }
+}
+
+function showRights(r) {
+  contentEl.innerHTML = `
+    <div class="panel">
+      <div class="resident-card">
+        <img src="${r.portrait}" alt="${r.name}">
+        <div>
+          <div style="font-weight:700;">${r.name}</div>
+          <div style="font-size:0.82rem; color:#94a3b8;">Confirm 5 Rights</div>
+        </div>
+      </div>
+      <div class="med-needed">Selected: ${r.correct}</div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin:12px 0;">
+        <label style="background:#334155; padding:12px; border-radius:8px; display:flex; align-items:center; gap:10px;"><input type="checkbox"> Right Patient</label>
+        <label style="background:#334155; padding:12px; border-radius:8px; display:flex; align-items:center; gap:10px;"><input type="checkbox"> Right Drug</label>
+        <label style="background:#334155; padding:12px; border-radius:8px; display:flex; align-items:center; gap:10px;"><input type="checkbox"> Right Dose</label>
+        <label style="background:#334155; padding:12px; border-radius:8px; display:flex; align-items:center; gap:10px;"><input type="checkbox"> Right Route (PO)</label>
+        <label style="background:#334155; padding:12px; border-radius:8px; display:flex; align-items:center; gap:10px;"><input type="checkbox"> Right Time</label>
+      </div>
+      <button class="btn btn-success" onclick="confirmRights()">Administer Medication</button>
+    </div>
+  `;
+}
+
+function confirmRights() {
+  const checks = document.querySelectorAll('input[type="checkbox"]');
+  if (!Array.from(checks).every(c => c.checked)) {
+    showFeedback('Check all 5 Rights!', false);
+    beep('bad');
+    return;
+  }
+  streak++;
+  const timeBonus = Math.floor(timeLeft * 1.2);
+  const streakBonus = streak * 20;
+  const total = 150 + timeBonus + streakBonus;
+  updateScore(total);
+  beep('good');
+  contentEl.innerHTML = `
+    <div class="scene">
+      <img src="${givingImg}" alt="Administered">
+      <div class="overlay-text">✅ Administered safely! +${total}${streak > 1 ? ' 🔥' : ''}</div>
+    </div>
+  `;
+  setTimeout(() => { currentIndex++; walkToNext(); }, 1400);
+}
+
+function showFeedback(text, good) {
+  const existing = document.querySelector('.feedback');
+  if (existing) existing.remove();
+  const fb = document.createElement('div');
+  fb.className = 'feedback ' + (good ? 'good' : 'bad');
+  fb.innerHTML = text;
+  const panel = document.querySelector('.panel');
+  if (panel) panel.insertBefore(fb, panel.firstChild);
+}
+
+function endGame(completed = false) {
+  gameActive = false;
+  musicPlaying = false;
+  clearInterval(timerInterval);
+  const high = Math.max(score, parseInt(localStorage.getItem('medpassHigh') || '0'));
+  localStorage.setItem('medpassHigh', high);
+  contentEl.innerHTML = `
+    <div class="start-screen">
+      <h2>${completed ? '🎉 Shift Complete!' : '⏰ Time Expired'}</h2>
+      <div style="font-size:2.4rem; font-weight:800; color:#22c55e; margin:16px 0;">${score}</div>
+      <p style="margin-bottom:8px; color:#94a3b8;">High Score: ${high}</p>
+      <p style="margin-bottom:20px; color:#cbd5e1;">
+        ${completed ? `All ${residents.length} residents medicated.` : `Completed ${currentIndex} of ${residents.length}`}
+      </p>
+      <button class="btn" onclick="startGame()">Play Again</button>
+    </div>
+  `;
+}
+
+contentEl.innerHTML = `
+  <div class="start-screen">
+    <img src="${hallwayImg}" alt="Nurse">
+    <h2>MedPass Madness</h2>
+    <p style="margin:12px 0 20px; color:#94a3b8; line-height:1.5;">
+      Walk the halls, enter rooms, and pass meds safely under pressure.<br>
+      Pick the right drug, confirm the 5 Rights, build streaks.
+    </p>
+    <button class="btn" onclick="startGame()">Start Shift (2:30)</button>
+  </div>
+`;
+</script>
+</body>
+</html>
