@@ -168,19 +168,12 @@ const residents = [
     options: ["Omeprazole 20mg", "Omeprazole 40mg", "Pantoprazole 40mg", "Aspirin 81mg"], portrait: res2Img }
 ];
 
-let currentIndex = 0, score = 0, streak = 0, timeLeft = 150, timerInterval = null, gameActive = false, musicPlaying = false; if (bgm) bgm.pause();
+let currentIndex = 0, score = 0, streak = 0, timeLeft = 150, timerInterval = null, gameActive = false;
 const timerEl = document.getElementById('timer');
 const scoreEl = document.getElementById('score');
 const contentEl = document.getElementById('content');
 
-let bgm = null;
-function initAudio() {
-  if (!bgm) {
-    bgm = new Audio(BASE + "music.mp3");
-    bgm.loop = true;
-    bgm.volume = 0.35;
-  }
-}
+function initAudio() {}
 
 function beep(type = 'good') {
   try {
@@ -206,12 +199,7 @@ function beep(type = 'good') {
   } catch(e) {}
 }
 
-function playChiptune() {
-  if (musicPlaying) return;
-  musicPlaying = true;
-  initAudio();
-  bgm.play().catch(() => {});
-}
+function playChiptune() {}
 
 function updateScore(delta) {
   score = Math.max(0, score + delta);
@@ -222,7 +210,6 @@ function startGame() {
   currentIndex = 0; score = 0; streak = 0; timeLeft = 150; gameActive = true;
   scoreEl.textContent = 0;
   initAudio();
-  playChiptune();
   startTimer();
   walkToNext();
 }
@@ -370,7 +357,6 @@ function showFeedback(text, good) {
 
 function endGame(completed = false) {
   gameActive = false;
-  musicPlaying = false; if (bgm) bgm.pause();
   clearInterval(timerInterval);
   const high = Math.max(score, parseInt(localStorage.getItem('medpassHigh') || '0'));
   localStorage.setItem('medpassHigh', high);
