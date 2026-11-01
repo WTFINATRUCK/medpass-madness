@@ -1,7 +1,7 @@
 # MedPass Madness 💊
 
 A mobile-first nursing med-pass time-management game.
-**Play:** https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html
+**Play:** https://medpass-madness.vercel.app (backup link: https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html)
 
 ## How it plays
 - **Hallway map** – residents ring call lights, each with a patience timer. Tap glowing rooms to queue your route; the nurse walks them in order. Let a timer run out and the resident gives up (−100).
