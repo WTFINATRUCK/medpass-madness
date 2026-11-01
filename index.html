@@ -168,50 +168,49 @@ const residents = [
     options: ["Omeprazole 20mg", "Omeprazole 40mg", "Pantoprazole 40mg", "Aspirin 81mg"], portrait: res2Img }
 ];
 
-let currentIndex = 0, score = 0, streak = 0, timeLeft = 150, timerInterval = null, gameActive = false, musicPlaying = false;
+let currentIndex = 0, score = 0, streak = 0, timeLeft = 150, timerInterval = null, gameActive = false, musicPlaying = false; if (bgm) bgm.pause();
 const timerEl = document.getElementById('timer');
 const scoreEl = document.getElementById('score');
 const contentEl = document.getElementById('content');
 
-let audioCtx;
+let bgm = null;
 function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!bgm) {
+    bgm = new Audio(BASE + "music.mp3");
+    bgm.loop = true;
+    bgm.volume = 0.35;
+  }
 }
 
 function beep(type = 'good') {
   try {
-    initAudio();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.frequency.value = type === 'good' ? 880 : (type === 'step' ? 180 : 220);
-    gain.gain.value = 0.08;
-    osc.start(); osc.stop(audioCtx.currentTime + (type === 'step' ? 0.08 : 0.15));
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if (type === 'good') {
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+    } else if (type === 'step') {
+      osc.frequency.value = 220;
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+    } else {
+      osc.frequency.value = 180;
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+    }
+    osc.start();
+    osc.stop(ctx.currentTime + 0.3);
   } catch(e) {}
 }
 
 function playChiptune() {
   if (musicPlaying) return;
   musicPlaying = true;
-  try {
-    initAudio();
-    const notes = [523, 659, 784, 659, 523, 392, 523, 392];
-    let i = 0;
-    function next() {
-      if (!gameActive && !musicPlaying) return;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.type = 'square';
-      osc.frequency.value = notes[i % notes.length];
-      gain.gain.value = 0.04;
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.18);
-      i++;
-      if (gameActive || musicPlaying) setTimeout(next, 220);
-    }
-    next();
-  } catch(e) {}
+  initAudio();
+  bgm.play().catch(() => {});
 }
 
 function updateScore(delta) {
@@ -371,7 +370,7 @@ function showFeedback(text, good) {
 
 function endGame(completed = false) {
   gameActive = false;
-  musicPlaying = false;
+  musicPlaying = false; if (bgm) bgm.pause();
   clearInterval(timerInterval);
   const high = Math.max(score, parseInt(localStorage.getItem('medpassHigh') || '0'));
   localStorage.setItem('medpassHigh', high);
