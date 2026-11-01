@@ -5,9 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0b1426">
 <title>MedPass Madness</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="A nursing med-pass time-management game. Juggle call lights, pass meds safely and catch the mistakes.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MedPass">
+<script>
+// Assets load from this site; the GitHub htmlpreview link pulls them from the repo instead.
+window.ASSET_BASE = /htmlpreview\.github\.io$/.test(location.hostname) ? "https://raw.githubusercontent.com/WTFINATRUCK/medpass-madness/main/assets/" : "assets/";
+(function(){ var st = document.createElement('style'); st.textContent = [500,600,700].map(function(w){ return "@font-face{font-family:'Fredoka';font-style:normal;font-weight:"+w+";font-display:swap;src:url("+ASSET_BASE+"fonts/fredoka-latin-"+w+"-normal.woff2) format('woff2')}"; }).join(''); document.head.appendChild(st); })();
+</script>
 <style>
 :root{
   --bg:#070b16; --panel:#121a2e; --panel2:#1a2440; --line:#2a3658; --text:#eef2ff; --muted:#8b97b8;
@@ -35,7 +45,20 @@ button{font-family:inherit;color:inherit}
 #mid .mini{display:block;width:90px;height:6px;border-radius:3px;background:#1a2645;overflow:hidden}
 #mid .mini i{display:block;height:100%;background:var(--green);transition:width .4s}
 #mid .hearts{font-size:.95rem;letter-spacing:1px}
-#mute{background:none;border:none;font-size:1.05rem;padding:4px;cursor:pointer;opacity:.85}
+#mute,#pause{background:none;border:none;font-size:1.05rem;padding:4px;cursor:pointer;opacity:.85}
+#pause{display:none}
+#hud.live #pause{display:block}
+#pauseOv{position:absolute;inset:0;z-index:60;background:rgba(5,9,20,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;animation:fadeUp .25s}
+#pauseOv h2{font-size:2.4rem;text-shadow:0 4px 0 #0369a1}
+#pauseOv p{color:var(--muted);font-size:.9rem;text-align:center;margin-bottom:6px}
+#pauseOv .btn{max-width:300px}
+.field{width:100%;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;background:#0b1222;color:#cbd5e1;border:1px solid var(--line);border-radius:10px;padding:8px;resize:none;margin:6px 0 8px;user-select:text;-webkit-user-select:text}
+.set-row{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.set-row b{display:block;margin-bottom:2px}
+.set-row p{font-size:.78rem;color:var(--muted);line-height:1.3}
+.set-row .actions .btn{padding:10px;font-size:.92rem}
+.fine{font-size:.7rem;color:var(--muted);text-align:center;line-height:1.4;margin-top:4px}
+.fine a{color:var(--sky)}
 .timebar{height:7px;background:#1a2645;border-radius:4px;margin-top:8px;overflow:hidden}
 .timebar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#16a34a,#86efac);transition:width .2s linear}
 #hud.endless .timebar i{background:linear-gradient(90deg,#7c3aed,#c4b5fd)}
@@ -356,6 +379,7 @@ button{font-family:inherit;color:inherit}
       <div class="hud-score"><span class="lbl">SCORE</span><b id="score">0</b></div>
       <div id="mid"></div>
       <div class="hud-time"><span class="lbl" id="tlbl">SHIFT</span><b id="timer">–:––</b></div>
+      <button id="pause" aria-label="Pause">⏸</button>
       <button id="mute" aria-label="Toggle sound">🔊</button>
     </div>
     <div class="timebar"><i id="timefill"></i></div>
@@ -372,7 +396,7 @@ button{font-family:inherit;color:inherit}
 /* =========================================================
    MedPass Madness — single-file time-management med-pass game
    ========================================================= */
-const BASE = "https://raw.githubusercontent.com/WTFINATRUCK/medpass-madness/main/assets/";
+const BASE = window.ASSET_BASE;
 const IMG = { hall: BASE+"hallway.jpg", door: BASE+"door.jpg", give: BASE+"giving.jpg", res1: BASE+"res1.jpg", res2: BASE+"res2.jpg" };
 const SHARE_URL = "https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html";
 
@@ -479,9 +503,21 @@ const UPGRADES = [
 
 /* ---------- Save ---------- */
 const SAVE_KEY = 'medpassSave2';
-let SAVE = { coins:0, stars:{}, best:{}, endlessBest:0, up:{shoes:0,manner:0,scanner:0,cart:0,coffee:0} };
-try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s) SAVE = {...SAVE, ...s, up:{...SAVE.up, ...(s.up||{})}}; } catch(e){}
-function persist(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch(e){} }
+const FRESH = () => ({ v:2, coins:0, stars:{}, best:{}, endlessBest:0, up:{shoes:0,manner:0,scanner:0,cart:0,coffee:0}, shifts:0 });
+function normalize(s){ const f = FRESH(); return {...f, ...s, v:2, up:{...f.up, ...((s&&s.up)||{})}, stars:{...((s&&s.stars)||{})}, best:{...((s&&s.best)||{})}}; }
+let SAVE = FRESH();
+try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s) SAVE = normalize(s); } catch(e){}
+function persist(){ SAVE.savedAt = Date.now(); try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch(e){} }
+// Ask the browser to keep our save even when storage is low (Android/Chrome honour this for installed apps).
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(()=>{}); } catch(e){}
+// Backup codes let players move progress between browsers, devices, or from the web into the app.
+function exportCode(){ return 'MPM2.' + btoa(unescape(encodeURIComponent(JSON.stringify(SAVE)))); }
+function importCode(code){
+  code = (code||'').trim(); if (!code.startsWith('MPM2.')) throw new Error('That doesn\'t look like a MedPass backup code.');
+  const s = JSON.parse(decodeURIComponent(escape(atob(code.slice(5)))));
+  if (typeof s !== 'object' || typeof s.coins !== 'number') throw new Error('Backup code is damaged.');
+  SAVE = normalize(s); persist();
+}
 const starsOf = i => SAVE.stars[i] || 0;
 const unlocked = i => i === 0 || starsOf(i-1) >= 1;
 function unlockedKinds(){ const ks = new Set(['std']); LEVELS.forEach(L => { if (starsOf(L.idx) >= 1) L.kinds.forEach(k => ks.add(k)); }); return [...ks]; }
@@ -547,6 +583,19 @@ const sfx = {
   coin(){ tone(1319,.08,{type:'square',vol:.05}); tone(1760,.2,{type:'square',vol:.05,at:.08}); },
   star(k){ tone(660+k*220,.2,{type:'triangle',vol:.1}); }
 };
+function pauseGame(){
+  if (!G || !G.active || G.ended || G.paused) return;
+  G.paused = true;
+  const ov = document.createElement('div'); ov.id = 'pauseOv';
+  ov.innerHTML = `<h2>Paused</h2><p>Residents will wait for you.<br>Your progress is saved after every shift.</p><button class="btn big" id="resume">▶ Resume</button><button class="btn ghost" id="quit">Quit shift</button>`;
+  app.appendChild(ov);
+  $('#resume').onclick = resumeGame;
+  let armed = false;
+  $('#quit').onclick = e => { if (!armed){ armed = true; e.target.textContent = 'Tap again to quit (no coins)'; e.target.classList.add('hold'); return; } ov.remove(); showTitle(); };
+}
+function resumeGame(){ const ov = $('#pauseOv'); if (ov) ov.remove(); if (!G) return; G.paused = false; G.lastTick = performance.now(); audio(); }
+$('#pause').onclick = pauseGame;
+document.addEventListener('visibilitychange', () => { if (document.hidden) pauseGame(); });
 function vib(p){ try { navigator.vibrate && navigator.vibrate(p); } catch(e){} }
 function renderMute(){ muteBtn.textContent = muted ? '🔇' : '🔊'; }
 muteBtn.onclick = () => { muted = !muted; try{ localStorage.setItem('medpassMute', muted?'1':'0'); }catch(e){} renderMute(); if (!muted) sfx.scan(); };
@@ -618,15 +667,16 @@ function tweenScore(down){
 function renderHud(){
   if (!G){ scoreEl.textContent = '0'; timerEl.textContent = '–:––'; timeFill.style.width = '100%'; midEl.innerHTML = ''; hud.className = ''; stage.classList.remove('danger'); return; }
   const live = G.active;
+  const lv = live ? ' live' : '';
   if (G.mode === 'endless'){
     tlbl.textContent = 'TIME'; timerEl.textContent = fmt(G.elapsed); timeFill.style.width = (G.hearts/G.maxHearts*100)+'%';
     midEl.innerHTML = `<span class="hearts">${'❤️'.repeat(Math.max(0,G.hearts))}${'🤍'.repeat(Math.max(0,G.maxHearts-G.hearts))}</span><span style="font-size:.75rem">✓ ${G.served} served</span>`;
-    hud.className = 'endless'+(live && G.hearts===1 ? ' danger' : '');
+    hud.className = 'endless'+lv+(live && G.hearts===1 ? ' danger' : '');
     stage.classList.toggle('danger', live && G.hearts === 1);
   } else {
     tlbl.textContent = 'SHIFT'; timerEl.textContent = fmt(G.time); timeFill.style.width = (Math.max(0,G.time)/G.total*100)+'%';
     midEl.innerHTML = `<span>✓ ${G.served} / ${G.n}</span><span class="mini"><i style="width:${G.resolved/G.n*100}%"></i></span>`;
-    hud.className = live && G.time<=20 ? 'danger' : live && G.time<=45 ? 'warn' : '';
+    hud.className = (live && G.time<=20 ? 'danger' : live && G.time<=45 ? 'warn' : '') + lv;
     stage.classList.toggle('danger', live && G.time<=20 && G.time>0);
   }
 }
@@ -640,6 +690,7 @@ function renderStreak(pop){
    ========================================================= */
 function leaveShift(){
   if (G){ clearInterval(G.tickId); G.active = false; G.ended = true; }
+  const ov = $('#pauseOv'); if (ov) ov.remove();
   G = null; renderHud(); renderStreak(); toastsEl.innerHTML = ''; fxEl.innerHTML = '';
 }
 function menuScene(title, sub){
@@ -657,10 +708,35 @@ function showTitle(){
     <div class="menu">
       <button class="btn big pulse" id="career">▶ Career <small>Level ${nextLv.num}</small></button>
       <div class="row2"><button class="btn purple" id="endless">∞ Endless</button><button class="btn gold" id="shop">🛒 Upgrades</button></div>
+      <div class="row2"><button class="btn ghost" id="settings">⚙️ Settings</button>${installEvt ? '<button class="btn ghost" id="install">📲 Install app</button>' : ''}</div>
     </div>`);
+  $('#settings').onclick = () => { audio(); showSettings(); };
+  if ($('#install')) $('#install').onclick = async () => { try { installEvt.prompt(); await installEvt.userChoice; } catch(e){} installEvt = null; showTitle(); };
   $('#career').onclick = () => { audio(); showCareer(); };
   $('#endless').onclick = () => { audio(); showEndlessIntro(); };
   $('#shop').onclick = () => { audio(); showUpgrades(); };
+}
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if (!G && $('#career') && !$('#install')) showTitle(); });
+function showSettings(){
+  phase(); leaveShift(); menuScene('⚙️ Settings', '');
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone;
+  setSheet(`<div class="topline"><button class="btn ghost" id="back" style="width:auto;padding:8px 14px;font-size:.9rem">‹ Back</button><span class="coins">🪙 ${SAVE.coins}</span></div>
+    <div class="set-row"><b>💾 Your progress</b><p>Saved automatically on this device after every shift and purchase · ⭐ ${LEVELS.reduce((s,L)=>s+starsOf(L.idx),0)}/27 · ${SAVE.shifts||0} shifts played</p></div>
+    <div class="set-row"><b>📤 Backup code</b><p>Copy this to move your progress to another phone or browser.</p>
+      <textarea class="field" id="code" rows="3" readonly>${exportCode()}</textarea>
+      <div class="actions"><button class="btn" id="copy">Copy code</button></div></div>
+    <div class="set-row"><b>📥 Restore from code</b><p>Paste a backup code. This replaces the progress on this device.</p>
+      <textarea class="field" id="paste" rows="2" placeholder="MPM2.…"></textarea>
+      <div class="actions"><button class="btn green" id="restore">Restore</button></div></div>
+    ${ios ? `<div class="set-row"><b>📲 Install on iPhone</b><p>In Safari tap <b>Share</b> → <b>Add to Home Screen</b> to play full-screen, even offline.</p></div>` : ''}
+    <div class="set-row"><b>🗑️ Reset progress</b><p>Erase all stars, coins and upgrades on this device.</p><div class="actions"><button class="btn hold" id="reset" style="flex:1">Reset everything</button></div></div>
+    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v2.1</div>`, 'scroll');
+  $('#back').onclick = showTitle;
+  $('#copy').onclick = async () => { const t = $('#code'); try { await navigator.clipboard.writeText(t.value); toast('📋 Backup code copied'); } catch(e){ t.select(); toast('Select the code and copy it'); } };
+  $('#restore').onclick = () => { try { importCode($('#paste').value); sfx.good(); toast('✅ Progress restored'); setTimeout(showSettings, 600); } catch(e){ sfx.bad(); toast('⚠️ '+e.message, 'bad'); } };
+  let armed = false;
+  $('#reset').onclick = e => { if (!armed){ armed = true; e.target.textContent = 'Tap again to erase'; return; } SAVE = FRESH(); persist(); toast('Progress reset'); showSettings(); };
 }
 function showCareer(){
   phase(); leaveShift(); menuScene('Career', 'Pick a shift');
@@ -787,6 +863,7 @@ function chooseKind(res){
 function gameTick(){
   if (!G || !G.active || G.ended) return;
   const now = performance.now(), dt = (now - G.lastTick)/1000; G.lastTick = now;
+  if (G.paused) return;
   if (document.hidden || dt > 1) return;
   if (G.mode === 'career'){ G.time -= dt; const s = Math.ceil(G.time); if (s !== G.lastSec){ G.lastSec = s; if (s <= 15 && s > 0) sfx.tick(); } }
   else G.elapsed += dt;
@@ -898,6 +975,7 @@ function hubLoop(){
   const f = now => {
     if (tok !== token || !MAP) return;
     const dt = Math.min(.05, (now-last)/1000); last = now;
+    if (G.paused){ rafId = requestAnimationFrame(f); return; }
     const W = MAP.W, H = MAP.H;
     const targetId = G.queue[0], target = targetId != null ? G.calls.find(c => c.id === targetId) : null;
     let walking = false;
@@ -1212,7 +1290,7 @@ function endShift(completed){
     coins = Math.floor(G.score/10);
     title = 'SHIFT OVER'; sub = `∞ Endless · survived ${fmt(G.elapsed)}`;
   }
-  SAVE.coins += coins; persist(); renderHud();
+  SAVE.coins += coins; SAVE.shifts = (SAVE.shifts||0) + 1; persist(); renderHud();
 
   let verdict;
   if (G.mode === 'endless') verdict = `You safely served <b>${G.served}</b> residents before running out of hearts.`;
@@ -1262,6 +1340,9 @@ function endShift(completed){
 Object.values(IMG).forEach(src => { const i = new Image(); i.src = src; });
 renderMute();
 showTitle();
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !/htmlpreview/.test(location.hostname)) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
 </script>
 </body>
 </html>
