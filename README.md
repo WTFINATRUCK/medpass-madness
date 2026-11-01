@@ -1,14 +1,26 @@
 # MedPass Madness 💊
 
-A mobile-first nursing med-pass game. **Play:** https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html
+A mobile-first nursing med-pass time-management game.
+**Play:** https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html
 
-## How to play
-1. **Hallway** – tap fast to hurry the med cart to the next room (the clock is running).
-2. **Door** – knock, door swings open, step inside (tap to skip).
-3. **Med cart** – pull the bottle that matches the MAR order. Wrong pull = −75 and your streak resets.
-4. **Bedside check** – tap each of the 5 Rights to verify MAR vs. bedside.
-5. **Administer** if everything matches, or **🛑 Hold** if something doesn't. Two residents per shift have a hidden problem (wrong wristband, already given, or NPO). Catching it = +200, an unnecessary hold = −100.
+## How it plays
+- **Hallway map** – residents ring call lights, each with a patience timer. Tap glowing rooms to queue your route; the nurse walks them in order. Let a timer run out and the resident gives up (−100).
+- **In the room** – pull the right med from the cart, then tap each Right on the bedside check (MAR vs. bedside). **Administer** if everything matches, **🛑 Hold** if something doesn't.
+- **Hidden problems** – wrong wristband, already given, NPO, vitals below hold parameters, ER tablets that can't be crushed, low blood sugar, PRN given too recently. Catching one = +200.
 
-Score = 150 per safe pass + time bonus + streak bonus. Finish all 6 residents in 2:30 for up to 3 stars.
+## Career (9 levels, 3 stars each)
+| Unit | New skill |
+|---|---|
+| 🌸 Memory Care (1–3) | Scheduled meds, 5 Rights, route planning |
+| 🦽 Rehab (4–6) | 💓 Vital-sign hold parameters · 🥄 Crushed meds / Do-Not-Crush |
+| 🏥 Med-Surg (7–9) | 🩸 Sliding-scale insulin · 😣 PRN pain by pain score |
 
-Single `index.html` plus `/assets`. No build step, no background music.
+★ serve 70% safely · ★★ hit the score target · ★★★ higher target with zero mistakes. Each star unlocks the next level.
+
+## Upgrades (coins from every shift)
+👟 Comfy Shoes · 💬 Bedside Manner · 📟 Barcode Scanner · 🗂️ Organized Cart · ☕ Coffee
+
+## ∞ Endless
+Calls keep coming faster; 3 hearts. Skills unlock as you earn Career stars.
+
+Single `index.html` + `/assets`. No build step, no ads, no music. Progress saves in the browser.
