@@ -3,7 +3,15 @@
 A mobile-first nursing med-pass time-management game.
 **Play:** https://medpass-madness.vercel.app (backup link: https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html)
 
-## What's new in v3.1 (Career Mode groundwork)
+## What's new in v3.2: Career Mode, Chapter 1 "The New Hire"
+- **8 Memory Care shifts** with a fixed cast (Mae, Jim, José, Lena, Henry, Evelyn) in the same rooms every shift, plus 2 rotating guests. Pick a preceptor; they react to your big moments and judge each shift.
+- **Live situations, not quizzes.** Mae insists she's Evelyn, José swears he never got his pill, the cuff says 62 but the order says apical. Every choice has an in-character consequence.
+- **Dana the CNA** pops up on the hallway map with what she saw. Assess it yourself, have her recheck vitals, or leave it for later, but ignore the urgent ones and they come back worse.
+- **Interruptions** hit mid-check: phones, visitors, lifts, a doctor rattling off orders.
+- **Call the Doc:** an SBAR phone mini-game. Put the call in order fast and skip the tomatoes.
+- **Sign-offs and rematches.** Clean shifts earn a sign-off. Anything that got you comes back later as a surprise 🔁 rematch, spaced out further each time you win it (Career and Arcade, never the Daily).
+
+## v3.1 (Career Mode groundwork)
 - **Arcade and Career split.** The 9-level ladder is now called **Arcade** (same levels, stars and saves). **Career** previews Chapter 1, *The New Hire*: eight Memory Care shifts with a preceptor, a recurring cast and a solo finale. Coming soon.
 - **"You're hired!" card.** The first time you open Career, a short intro sets the scene plus a one-line note that it's a fictional care home with simplified meds. The same note is in Settings.
 - **Rematch pile.** Situations that trip you up in any mode (wrong pull, allergy, out-of-range vitals, crushing an ER tablet and so on) are saved so they can come back as surprise rematches in Chapter 1.

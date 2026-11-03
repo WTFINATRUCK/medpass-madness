@@ -139,6 +139,42 @@ button{font-family:inherit;color:inherit}
 .best-line{text-align:center;color:var(--muted);font-size:.82rem}
 .unit{margin-bottom:14px;animation:chipIn .3s both}
 .signoffs{display:grid;gap:6px}
+button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;box-shadow:0 3px 0 #0b1222}
+.so.locked{opacity:.5}
+.so.nextup{border-color:var(--gold);animation:chipIn .3s both,urge 1.4s infinite 1s}
+.so .s3{font-size:.8rem;color:var(--gold)} .so .s3 .off{color:#3b4766}
+.pchip.pre{display:flex;align-items:center;gap:10px;width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:8px 10px;margin-bottom:12px;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pchip.pre img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top}
+.pchip.pre small{display:block;color:var(--muted);font-size:.72rem}
+.beat{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px;animation:chipIn .35s both}
+.beat img{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:top;flex:0 0 auto;border:2px solid var(--gold)}
+.beat b{font-size:.8rem;color:var(--gold)} .beat p{font-size:.92rem;line-height:1.35;margin-top:2px}
+.beat.tip img{width:34px;height:34px;border-color:var(--sky)} .beat.tip b{color:var(--sky)} .beat.tip p{font-size:.84rem;color:#dbe4f5}
+.beat.in{margin-bottom:12px}
+.sit{font-size:.95rem}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;font-size:.95rem;padding:12px 14px;line-height:1.25}
+.tav{width:20px;height:20px;border-radius:50%;object-fit:cover;object-position:top;vertical-align:middle;margin-right:2px}
+.dana{position:absolute;left:3%;right:3%;bottom:6px;z-index:20;background:rgba(15,23,42,.96);border:2px solid #f59e0b;border-radius:16px;padding:10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:popIn .35s both;color:#fff}
+.dana-h{display:flex;gap:8px;align-items:center}
+.dav{width:34px;height:34px;border-radius:50%;background:#7c2d12;display:grid;place-items:center;font-size:1.2rem}
+.dana-h b{font-size:.9rem} .dana-h small{display:block;color:var(--muted);font-size:.7rem}
+.dana p{font-size:.92rem;font-weight:600;margin:6px 0 8px;line-height:1.3}
+.dana-a{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.dana-a button{background:#24304f;color:#fff;border:0;border-radius:10px;padding:9px 4px;font:inherit;font-size:.78rem;font-weight:700;box-shadow:0 3px 0 #141c33;cursor:pointer}
+.dana-a button:first-child{background:var(--green);box-shadow:0 3px 0 #15803d}
+.intr{position:absolute;inset:0;z-index:40;background:var(--panel);border-radius:22px 22px 0 0;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px;animation:popIn .3s both}
+.intr-h{font-weight:800;color:#f59e0b;letter-spacing:.04em}
+.intr p{font-size:1rem;line-height:1.35}
+.intr-a{display:grid;gap:8px}
+.intr-a .btn{text-align:left;font-size:.95rem}
+.sbar-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.slot{background:#0f172a;border:2px dashed #3b4766;border-radius:10px;padding:5px 2px;text-align:center}
+.slot b{display:block;font-size:1.1rem;color:#64748b} .slot span{font-size:.6rem;color:var(--muted)}
+.slot.on{border-style:solid;border-color:var(--green);background:#052e16} .slot.on b{color:var(--green)}
+.sbar-cards{display:grid;gap:6px}
+.scard{background:var(--panel2);border:1px solid var(--line);color:#fff;border-radius:12px;padding:9px 11px;font:inherit;font-size:.85rem;text-align:left;line-height:1.3;cursor:pointer;box-shadow:0 3px 0 #0b1222}
+.scard.used{opacity:.25} .scard.nope{opacity:.35;text-decoration:line-through}
 .so{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:.86rem;animation:chipIn .3s both}
 .so b{width:24px;height:24px;border-radius:50%;background:#24304f;display:grid;place-items:center;font-size:.75rem}
 .so em{font-style:normal;font-size:.7rem;color:var(--muted)}
@@ -661,7 +697,10 @@ const KIND = {
   vitals: {icon:'💓', label:'Check vitals', name:'Vital-sign holds', tip:"Heart & BP meds have hold parameters. Read the bedside vitals — if they're out of range, HOLD."},
   crush:  {icon:'🥄', label:'Crush meds',   name:'Crushed meds', tip:"Some residents need pills crushed in applesauce. ER / XL tablets can NEVER be crushed — call pharmacy."},
   insulin:{icon:'🩸', label:'Blood sugar',  name:'Sliding-scale insulin', tip:"Check the blood sugar, then draw up units from the scale. Under 70? Hold the insulin and give juice."},
-  prn:    {icon:'😣', label:'Pain',         name:'PRN pain meds', tip:"Ask the pain score and pick the PRN whose range matches. Last dose too recent? Hold."}
+  prn:    {icon:'😣', label:'Pain',         name:'PRN pain meds', tip:"Ask the pain score and pick the PRN whose range matches. Last dose too recent? Hold."},
+  moment: {icon:'❗', label:'Situation'},
+  report: {icon:'🔎', label:'Check on them'},
+  sbar:   {icon:'📞', label:'Call the doc'}
 };
 const WHY = {
   patient: c => `The wristband said <b>${c.task.wrong.name} · ${c.task.wrong.dob}</b>, not ${c.res.name} · ${c.res.dob}. Wrong patient — med held & band fixed.`,
@@ -729,11 +768,12 @@ const SAVE_KEY = 'medpassSave2';
 const DECK_MAX = 40;
 const FRESH = () => ({ v:4, coins:0, stars:{}, best:{}, endlessBest:0, up:{shoes:0,manner:0,scanner:0,cart:0,coffee:0}, shifts:0,
   nurse:null, nick:'', xp:0, streak:{count:0, last:'', freezes:1, week:''}, daily:{},
-  story:{seen:false, preceptor:null, shift:0, signoffs:{}}, deck:[] });
+  story:{seen:false, preceptor:null, shift:0, signoffs:{}, stars:{}, best:{}, done:false}, deck:[] });
 const validCard = c => c && typeof c === 'object' && typeof c.k === 'string';
+const deckLabel = k => DECK_KEYS[k] || (k.startsWith('m_') ? 'Career situation' : k);
 function normalize(s){ const f = FRESH(); s = s||{}; const st = (s.story && typeof s.story === 'object') ? s.story : {};
   return {...f, ...s, v:4, up:{...f.up, ...(s.up||{})}, stars:{...(s.stars||{})}, best:{...(s.best||{})}, streak:{...f.streak, ...(s.streak||{})}, daily:{...(s.daily||{})},
-    story:{...f.story, ...st, signoffs:{...(st.signoffs||{})}}, deck:(Array.isArray(s.deck) ? s.deck.filter(validCard) : []).slice(-DECK_MAX)}; }
+    story:{...f.story, ...st, signoffs:{...(st.signoffs||{})}, stars:{...(st.stars||{})}, best:{...(st.best||{})}}, deck:(Array.isArray(s.deck) ? s.deck.filter(validCard) : []).slice(-DECK_MAX)}; }
 let SAVE = FRESH();
 try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s) SAVE = normalize(s); } catch(e){}
 function persist(){ SAVE.savedAt = Date.now(); try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch(e){} }
@@ -752,7 +792,7 @@ const DECK_KEYS = {patient:'Wrong patient', time:'Already given', route:'NPO', v
   hypo:'Low blood sugar', er:'Do not crush', pick:'Wrong pull', falseFlag:'Held a correct med', crushOk:'Crushable tablet'};
 const addDays = (key, n) => { const [y,m,d] = key.split('-').map(Number); return todayKey(new Date(y, m-1, d+n)); };
 function logMistake(c, key){
-  if (!G || !DECK_KEYS[key]) return;
+  if (!G || !(DECK_KEYS[key] || storyKey(key))) return;
   (G.mistakes || (G.mistakes = [])).push({k:key, kind:(c && c.task && c.task.kind) || '', drug:String((c && c.task && c.task.correct) || '')});
 }
 function mergeDeck(list){
@@ -975,7 +1015,7 @@ function showTitle(){
     <div class="menu">
       <button class="btn big ${done?'ghost':'gold pulse'}" id="daily">📅 Daily Shift #${D.num} <small>${done ? '✓ '+'★'.repeat(done.stars||0)+' · '+done.score : 'NEW · same for everyone'}</small></button>
       <button class="btn big ${done?'pulse':''}" id="career">🎮 Arcade <small>Level ${nextLv.num}</small></button>
-      <button class="btn green" id="story">🩺 Career <small>The New Hire · coming soon</small></button>
+      <button class="btn green ${SAVE.story.seen ? '' : 'pulse'}" id="story">🩺 Career <small>${SAVE.story.done ? 'Chapter 1 cleared ✓' : `The New Hire · Shift ${Math.max(1, STORY.findIndex((_, i) => storyUnlocked(i) && !(SAVE.story.stars[i] > 0)) + 1 || 8)}`}</small></button>
       <div class="row2"><button class="btn purple" id="endless">∞ Endless</button><button class="btn ghost" id="shop">🛒 Upgrades</button></div>
       <div class="row2"><button class="btn ghost" id="settings">⚙️ Settings</button>${installEvt ? '<button class="btn ghost" id="install">📲 Install</button>' : ''}</div>
     </div>`);
@@ -1028,7 +1068,7 @@ function showSettings(){
       <div class="actions"><button class="btn green" id="restore">Restore</button></div></div>
     ${ios ? `<div class="set-row"><b>📲 Install on iPhone</b><p>In Safari tap <b>Share</b> → <b>Add to Home Screen</b> to play full-screen, even offline.</p></div>` : ''}
     <div class="set-row"><b>🗑️ Reset progress</b><p>Erase all stars, coins, upgrades and your profile on this device.</p><div class="actions"><button class="btn hold" id="reset" style="flex:1">Reset everything</button></div></div>
-    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v3.1</div>`, 'scroll');
+    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v3.2</div>`, 'scroll');
   $('#back').onclick = showTitle;
   $('#prof').onclick = () => showProfile(false);
   $('#copy').onclick = async () => { const t = $('#code'); try { await navigator.clipboard.writeText(t.value); toast('📋 Backup code copied'); } catch(e){ t.select(); toast('Select the code and copy it'); } };
@@ -1049,31 +1089,11 @@ function showCareer(){
 /* ---------- Career Mode (preview). Chapter 1 scripts are pending nurse review; shifts unlock in Phase 2. ---------- */
 const FRAMING = `Day one at a brand-new job. Six residents with big personalities, one preceptor who has seen it all, and a hallway that never stops ringing. Survive eight shifts and you fly solo.`;
 const FRAMING_FINE = `Just a game: a fictional care home with simplified meds — <strong>not a dosing reference</strong>. Real nursing takes school and a license, and the rules vary by state and facility.`;
-// Shift titles are the fun-facing names; the skill each one leans on is in the Chapter 1 scripts doc.
-const SIGNOFFS = [
-  {icon:'🪪', name:'Who Are You Again?'}, {icon:'⚠️', name:'Allergic to Surprises'}, {icon:'❤️', name:'Pressure’s Dropping'},
-  {icon:'🥄', name:'Don’t Crush It'}, {icon:'🗣️', name:'Dana Saw Something'}, {icon:'📞', name:'Everybody Wants You'},
-  {icon:'☎️', name:'Call the Doc'}, {icon:'✅', name:'Flying Solo'}];
 function showFraming(from){
   phase(); leaveShift(); menuScene('🩺 You’re hired!', 'Career Mode');
   setSheet(`<div class="frame-card"><p>${FRAMING}</p><p class="frame-fine">${FRAMING_FINE}</p></div>
     <button class="btn big pulse" id="ok">Let’s go</button>`, 'scroll');
   $('#ok').onclick = () => { audio(); sfx.good(); SAVE.story.seen = true; persist(); from === 'settings' ? showSettings() : showStory(); };
-}
-function showStory(){
-  phase(); leaveShift();
-  if (!SAVE.story.seen) return showFraming('story');
-  menuScene('🩺 Career', 'New Hire · Chapter 1');
-  const total = SAVE.deck.length;
-  setSheet(`<div class="topline">${backBtn()}<span class="coins">PREVIEW</span></div>
-    <div class="unit"><div class="unit-h"><span class="ui">🌸</span><div>Chapter 1 · The New Hire<small>Memory Care · 8 shifts · earn your preceptor’s trust, then fly solo</small></div></div>
-      <div class="signoffs">${SIGNOFFS.map((so,i) => `<div class="so" style="animation-delay:${i*.04}s"><b>${i+1}</b><span>${so.icon} ${so.name}</span><em>🔒 Soon</em></div>`).join('')}</div></div>
-    <div class="set-row"><b>🔁 Rematch pile · ${total}</b><p>${total ? 'Every situation that got you is waiting for a rematch. They come back to haunt you in Chapter 1.' : 'Anything that trips you up in any mode gets saved for a rematch.'}</p></div>
-    <div class="fine">Chapter 1 opens soon — Arcade’s open all night. <a href="#" id="about">About Career</a></div>
-    <div class="actions"><button class="btn big" id="arc">🎮 Play Arcade meanwhile</button></div>`, 'scroll');
-  $('#back').onclick = showTitle;
-  $('#about').onclick = e => { e.preventDefault(); showFraming('story'); };
-  $('#arc').onclick = () => { audio(); showCareer(); };
 }
 function newSkillCard(k){ return `<div class="newskill"><span>${KIND[k].icon}</span><div><b>NEW SKILL · ${KIND[k].name}</b><p>${KIND[k].tip}</p></div></div>`; }
 const HOWTO = `<div class="newskill"><span>🔔</span><div><b>HOW IT WORKS</b><p>Tap glowing rooms to plan your route. In each room: foam in, pull the right med, then read the bedside check — <b>Give</b> if it all matches, <b>Hold</b> and tap the wrong row if it doesn't.</p></div></div>`;
@@ -1131,7 +1151,7 @@ function startShift(mode, L){
   const up = SAVE.up, cfg = mode === 'endless' ? {n:Infinity, time:0, maxActive:2, patience:48, spawnEvery:11, kinds:unlockedKinds(), trapRate:.17, rush:[]} : L;
   R = mode === 'daily' ? mulberry32(L.seed) : Math.random;
   // 8 residents on the floor this shift, one per room
-  const floor = shuffle(ROSTER).slice(0, 8);
+  const floor = mode === 'story' ? storyFloor() : shuffle(ROSTER).slice(0, 8);
   G = { mode, L: L||null, n: cfg.n, total: mode==='endless' ? 0 : cfg.time + (mode==='career' ? 15*up.coffee : 0),
         time: mode==='endless' ? 0 : cfg.time + (mode==='career' ? 15*up.coffee : 0), elapsed:0,
         maxActive: cfg.maxActive, patienceBase: cfg.patience, spawnEvery: cfg.spawnEvery, kinds: cfg.kinds, trapRate: cfg.trapRate,
@@ -1141,9 +1161,12 @@ function startShift(mode, L){
         calls:[], queue:[], visit:null, cid:0, spawned:0, resolved:0, served:0, spawnTimer:3, cool: ROOMS.map(()=>0),
         nurse:{x:.5, y:.86, path:null, pathFor:null}, view:'count', tapped:false, lastSec:-1, log:[],
         score:0, shown:0, streak:0, bestStreak:0, active:false, ended:false, tickId:null,
-        stats:{passes:0, catches:0, wrongPicks:0, slips:0, badHolds:0, unsafe:0, missed:0} };
+        stats:{passes:0, catches:0, wrongPicks:0, slips:0, badHolds:0, unsafe:0, missed:0},
+        pool: cfg.pool || null, clock:0, events:(cfg.events||[]).map(e => ({...e})), intq:(cfg.ints||[]).slice(), intRematch:new Set(),
+        danaQ:[], dana:null, special:[], esc:[], sx:{good:0, bad:0, reportsBad:0}, won:[], mistakes:[] };
   // Pre-plan the whole shift so the Daily is the same for everyone
-  if (mode !== 'endless'){
+  if (mode === 'story') G.plan = storyPlan(cfg);
+  else if (mode !== 'endless'){
     G.plan = [];
     for (let k = 0; k < cfg.n; k++){
       const ri = rnd(8), res = floor[ri];
@@ -1151,6 +1174,7 @@ function startShift(mode, L){
       G.plan.push({ room: ri, kind, task: makeTask(res, kind) });
     }
   }
+  if (mode === 'career' || mode === 'story') injectRematches(G.plan);   // never the Daily: it must stay identical for everyone
   scoreEl.textContent = '0'; renderHud(); renderStreak();
   menuScene(''); sceneEl.querySelector('.kb').classList.remove('kb'); sheetEl.innerHTML = ''; sheetEl.className = 'sheet';
   let n = 3;
@@ -1162,14 +1186,15 @@ function startShift(mode, L){
 }
 
 /* ---------- Task generation ---------- */
-function makeTask(res, kind){
+function makeTask(res, kind, force){
   const t = {kind, trap:null, due:'0900'};
   const opts = (correct, decoys) => { let d = shuffle(decoys); if (SAVE.up.cart) d = d.slice(0, d.length-1); return shuffle([correct, ...d]).map(optFrom); };
   const others = () => (G ? G.floor : ROSTER).filter(x => x !== res && x.sex === res.sex);
   const maybePatient = p => { if (R() < p){ const pool = others(); if (pool.length){ t.trap = 'patient'; t.wrong = pick1(pool); } } };
   if (kind === 'std'){
     const drugAllergy = ALLERGY_ORDERS[res.allergy];
-    let roll = R() < G_trapRate() ? pick1(drugAllergy ? ['patient','time','route','allergy','allergy'] : ['patient','time','route']) : null;
+    const pool = G && G.pool ? G.pool.filter(k => k !== 'allergy' || drugAllergy) : (drugAllergy ? ['patient','time','route','allergy','allergy'] : ['patient','time','route']);
+    let roll = ['patient','time','route','allergy'].includes(force) && (force !== 'allergy' || drugAllergy) ? force : (R() < G_trapRate() && pool.length ? pick1(pool) : null);
     let lab, dec, due;
     if (roll === 'allergy'){ [lab, dec] = drugAllergy; due = '0900'; t.trap = 'allergy'; }
     else { [lab, dec, due] = pick1(STD); if (roll === 'patient') maybePatient(1); else if (roll) t.trap = roll; }
@@ -1179,16 +1204,16 @@ function makeTask(res, kind){
   } else if (kind === 'vitals'){
     const o = pick1(VIT); Object.assign(t, {correct:o.label, options:opts(o.label, o.decoys), holdIf:o.holdIf});
     [t.drug, t.dose] = splitLabel(o.label);
-    if (R() < .25){ t.trap = 'vitals'; t.reading = o.low(); } else { t.reading = o.ok(); maybePatient(G_trapRate()*.4); }
+    if (force === 'vitals' || R() < .25){ t.trap = 'vitals'; t.reading = o.low(); } else { t.reading = o.ok(); maybePatient(G_trapRate()*.4); }
     t.mar = marRow('0900', `${o.label} PO`, `Daily · HOLD if ${o.holdIf}`);
   } else if (kind === 'crush'){
-    const er = R() < .25, o = pick1(er ? CRUSH_ER : CRUSH_OK);
+    const er = force === 'er' ? true : force === 'crushOk' ? false : R() < .25, o = pick1(er ? CRUSH_ER : CRUSH_OK);
     Object.assign(t, {correct:o.label, options:opts(o.label, o.decoys), er});
     [t.drug, t.dose] = splitLabel(o.label);
     t.mar = marRow('0900', `${o.label} PO`, `Daily · 🥄 swallow precautions: crush meds`);
     if (!er) maybePatient(G_trapRate()*.4);
   } else if (kind === 'insulin'){
-    const r = R();
+    const r = force === 'hypo' ? 0 : R();
     const bg = r < .12 ? 52+rnd(15) : r < .38 ? 150+rnd(50) : r < .64 ? 200+rnd(50) : r < .85 ? 250+rnd(50) : 300+rnd(60);
     const row = SCALE.find(s => bg >= s.lo && bg <= s.hi);
     Object.assign(t, {bg, units:row.u, drug:'Insulin lispro'});
@@ -1203,7 +1228,7 @@ function makeTask(res, kind){
     const pain = 2 + rnd(8), o = PRN.find(p => pain >= p.lo && pain <= p.hi);
     Object.assign(t, {pain, correct:o.label, freq:o.freq, options:opts(o.label, [...PRN.filter(p=>p!==o).map(p=>p.label), 'Ibuprofen 400mg'])});
     [t.drug, t.dose] = splitLabel(o.label);
-    if (R() < .2) t.trap = 'prnTime';
+    if (force === 'prnTime' || R() < .2) t.trap = 'prnTime';
     t.mar = `<div class="mar-h" style="margin-bottom:2px">MAR · ${esc(res.name)} · DOB ${res.dob} · PRN PAIN</div>${PRN.map(p => `<div class="mar-l"><span>${p.label} PO</span><em>q${p.freq}h · ${p.tier} ${p.lo}–${p.hi}</em></div>`).join('')}`;
   }
   if (t.mar && kind !== 'prn') t.mar = t.mar.replace('%NAME%', `${esc(res.name)} · DOB ${res.dob}`);
@@ -1237,11 +1262,13 @@ function gameTick(){
     if (spawnCall()) G.spawnTimer = G.spawnEvery*(.75+Math.random()*.5);
   }
   for (const c of G.calls.slice()){ if (c.inProgress) continue; c.patience -= dt; if (c.patience <= 0) missCall(c); }
+  G.clock += dt;
+  if (G.mode === 'story') storyTick();
   renderHud();
   if (G.view === 'hub') updateRooms();
   if (G.mode !== 'endless'){
     if (G.time <= 0) return endShift(false);
-    if (G.spawned >= G.n && G.calls.length === 0 && !G.visit) return endShift(true);
+    if (G.spawned >= G.n && G.calls.length === 0 && !G.visit && !storyBusy()) return endShift(true);
   } else if (G.hearts <= 0) return endShift(false);
 }
 function triggerRush(){
@@ -1275,6 +1302,7 @@ function spawnCall(){
 function missCall(c){
   G.calls = G.calls.filter(x => x !== c); G.queue = G.queue.filter(id => id !== c.id);
   G.stats.missed++; G.streak = 0; renderStreak(); G.resolved++; G.cool[c.room] = 6; G.log.push('miss');
+  if (c.task.kind === 'report' && G.sx){ G.sx.reportsBad++; logMistake(c, 'm_'+c.task.id); }
   addScore(-100); sfx.bad(); vib([80,40,80]);
   if (G.mode === 'endless'){ G.hearts--; ramp(); }
   if (G.view === 'hub' && MAP){ const p = elCenter(MAP.rooms[c.room]); floatText('😤 −100', 'bad', p.x, p.y-20, 1300); shake(); }
@@ -1302,6 +1330,7 @@ function showHub(){
   MAP = {el:map, rooms:[...map.querySelectorAll('.room')], nurse:$('#nurse'), line:$('#routeLine'), coach:$('#coach'), tip:$('#hubTip'), W:map.clientWidth, H:map.clientHeight};
   MAP.rooms.forEach(b => b.onclick = () => tapRoom(+b.dataset.i));
   updateRooms(); hubLoop();
+  if (G.mode === 'story') renderDana();
 }
 window.addEventListener('resize', () => { if (MAP){ MAP.W = MAP.el.clientWidth; MAP.H = MAP.el.clientHeight; } });
 function callAt(i){ return G.calls.find(c => c.room === i && !c.inProgress); }
@@ -1332,7 +1361,7 @@ function updateRooms(){
       if (coachRoom === null && qi < 0) coachRoom = i;
     } else el.classList.remove('urgent');
   });
-  const showCoach = G.mode==='career' && G.L.idx===0 && !G.tapped && coachRoom !== null;
+  const showCoach = (G.mode==='career' || G.mode==='story') && G.L.idx===0 && !G.tapped && coachRoom !== null;
   MAP.coach.classList.toggle('on', showCoach);
   if (showCoach){ const el = MAP.rooms[coachRoom], mr = MAP.el.getBoundingClientRect(), r = el.getBoundingClientRect();
     MAP.coach.style.left = (r.left-mr.left+r.width/2)+'px';
@@ -1424,6 +1453,10 @@ function roomScene(c){
       <div class="pt-tags">${r.allergy !== 'None' ? `<span class="allergy">⚠ ${r.allergy}</span>` : `<span class="nka">NKA</span>`}<span class="ktag">${KIND[t.kind].icon} ${KIND[t.kind].label}</span></div></div>
     <div class="say" id="say"></div>`;
   after(350, () => say(pickUI(r.greet)));
+  if (t.rematch) after(250, () => { banner('🔁 REMATCH', 'goldb', .3); toast('👀 This one got you before…'); });
+  if (t.kind === 'moment') return stepMoment(c);
+  if (t.kind === 'report') return stepReport(c);
+  if (t.kind === 'sbar') return stepSbar(c, t.id);
   if (t.kind === 'insulin') stepAssess(c, () => stepInsulin(c));
   else if (t.kind === 'prn') stepAssess(c, () => stepPick(c, () => stepRights(c)));
   else if (t.kind === 'crush') stepPick(c, () => stepPrep(c));
@@ -1584,6 +1617,7 @@ function stepRights(c){
   const sc = SAVE.up.scanner;
   if (sc) rows.forEach((rt,k) => { if (rt.scan && rt.scan <= sc) after(250 + k*120, () => { els[k].classList.add(rt.bad ? 'bad' : 'ok', 'scanned'); sfx.scan(); if (rt.bad){ const p = elCenter(els[k]); floatText('📟 Scanner alert!', 'bad', p.x, p.y-16); hold.classList.add('urge'); } }); });
   give.onclick = () => { if (!G.active) return; if (hasTrap) finishUnsafe(c, GAVE[c.task.trap](c), c.task.trap); else finishPass(c); };
+  maybeInterrupt(c);
   hold.onclick = () => {
     if (!G.active) return;
     if (!flagging){
@@ -1610,6 +1644,7 @@ function finishPass(c){
   phase();
   G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak); G.stats.passes++; G.served++;
   G.log.push(c.slip ? 'slip' : 'pass');
+  if (c.task.rematch && !c.slip) winRematch(c.task.rematch);
   const pb = Math.round(100*c.arriveFrac), sb = G.streak*20, total = 150 + pb + sb;
   addScore(total);
   outcomeSheet(`<div class="sheet-h"><span>Med pass · ${esc(c.res.call)}</span><b class="okc">SAFE ✓</b></div>
@@ -1629,6 +1664,8 @@ function finishHold(c, slipped, key){
   const pts = slipped ? 75 : 200 + G.streak*10;
   if (!slipped){ G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak); }
   G.stats.catches++; G.served++; addScore(pts); G.log.push('catch');
+  if (c.task.rematch && !slipped) winRematch(c.task.rematch);
+  mentorOnce('catch');
   outcomeSheet(`<div class="sheet-h"><span>Held & reported</span><b class="goldc">${SHORT[key]}</b></div>
     <div class="msg">🛡️ ${WHY[key](c)}</div><div class="tally"><div class="trow total"><span>${slipped ? 'Caught (after a slip)' : 'Error prevented'}</span><b>+${pts}</b></div></div>`);
   const p = sceneCenter(.55);
@@ -1642,12 +1679,13 @@ function finishUnsafe(c, why, key){
   outcomeSheet(`<div class="sheet-h"><span>Med error</span><b class="badc">${key ? SHORT[key] : 'UNSAFE'}</b></div>
     <div class="msg">⚠️ ${why}${key ? `<br><small style="color:var(--muted)">It was in the bedside check — tap 🛑 Hold, then the row that doesn't match.</small>` : ''}</div><div class="tally"><div class="trow total neg"><span>Med error reported</span><b>−100</b></div></div>`);
   const p = sceneCenter(.55); sfx.bad(); shake(); banner('MED ERROR!', 'bad', .55); floatText('−100', 'bad', p.x, p.y+56, 1400); say('Oh dear…');
+  mentorOnce('bad');
 }
 function closeVisit(c){
   if (!G || G.ended || !c) return;
   G.calls = G.calls.filter(x => x !== c); G.visit = null; G.cool[c.room] = 8; G.resolved++;
   ramp(); renderHud();
-  if (G.mode !== 'endless' && G.spawned >= G.n && G.calls.length === 0) return endShift(true);
+  if (G.mode !== 'endless' && G.spawned >= G.n && G.calls.length === 0 && !storyBusy()) return endShift(true);
   if (G.mode === 'endless' && G.hearts <= 0) return endShift(false);
   const r = ROOMS[c.room]; G.nurse.x = r.dx; G.nurse.y = r.y;
   showHub();
@@ -1659,7 +1697,7 @@ function endShift(completed){
   G.ended = true; G.active = false; clearInterval(G.tickId); phase();
   stage.classList.remove('danger'); toastsEl.innerHTML = ''; fxEl.innerHTML = ''; streakEl.classList.remove('on');
   const S = G.stats, mistakes = S.wrongPicks + S.slips + S.badHolds + S.unsafe;
-  let stars = 0, isBest = false, title, sub, unlockedNext = false, early = 0;
+  let stars = 0, isBest = false, title, sub, unlockedNext = false, early = 0, signed = false, chapterDone = false;
   if (G.mode !== 'endless'){
     if (!completed){ const left = G.calls.length + (G.n - G.spawned); G.stats.missed += left; for (let k=0;k<left;k++) G.log.push('miss'); }
     if (completed && G.time > 0){ early = Math.ceil(G.time) * 3; G.score += early; }
@@ -1676,6 +1714,15 @@ function endShift(completed){
     unlockedNext = prevStars === 0 && stars >= 1 && L.idx < LEVELS.length-1;
     isBest = G.score > (SAVE.best[L.idx]||0) && G.score > 0; if (isBest) SAVE.best[L.idx] = G.score;
     title = stars ? 'SHIFT COMPLETE' : completed ? 'ROUGH SHIFT' : "TIME'S UP!"; sub = `${L.unit.icon} ${L.unit.name} · Level ${L.num}`;
+  } else if (G.mode === 'story'){
+    const L = G.L, i = L.idx, st = SAVE.story, prev = st.stars[i] || 0;
+    if (stars > prev) st.stars[i] = stars;
+    isBest = G.score > (st.best[i]||0) && G.score > 0; if (isBest) st.best[i] = G.score;
+    signed = stars >= 1 && S.unsafe === 0 && G.sx.reportsBad === 0 && (!L.capstone || S.catches >= 1);
+    if (signed) st.signoffs[i] = true;
+    if (L.capstone && signed){ chapterDone = !st.done; st.done = true; }
+    unlockedNext = prev === 0 && stars >= 1 && i < STORY.length-1;
+    title = signed ? 'SIGNED OFF ✓' : stars ? 'NOT YET' : completed ? 'ROUGH SHIFT' : "TIME'S UP!"; sub = `${L.icon} Shift ${L.num} · ${L.name}`;
   } else if (G.mode === 'daily'){
     const D = G.L, prev = SAVE.daily[D.key];
     isBest = !prev || G.score > prev.score;
@@ -1687,6 +1734,7 @@ function endShift(completed){
     coins = Math.floor(G.score/10);
     title = 'SHIFT OVER'; sub = `∞ Endless · survived ${fmt(G.elapsed)}`;
   }
+  promoteRematches(G.won); G.won = [];
   mergeDeck(G.mistakes); G.mistakes = [];
   SAVE.coins += coins; SAVE.shifts = (SAVE.shifts||0) + 1; persist(); renderHud();
 
@@ -1699,6 +1747,15 @@ function endShift(completed){
   else if (S.wrongPicks) verdict = `💊 ${S.wrongPicks} wrong pull${S.wrongPicks>1?'s':''} from the cart — check drug <i>and</i> dose.`;
   else if (S.missed) verdict = `⏱ ${S.missed} resident${S.missed>1?'s':''} gave up waiting. Queue the 😠 rooms first.`;
   else verdict = `Need ${G.t3} for ★★★ — move faster for bigger bonuses.`;
+  if (G.mode === 'story'){
+    const pre = signed ? (G.L.capstone ? `You're cleared for a full assignment. Proud of you.` : `That's a sign-off. I'd trust you with that one on your own.`)
+      : S.unsafe ? `One of those would've reached a resident. Not yet — run it back.`
+      : G.sx.reportsBad ? `Dana flagged something and it sat there. Not yet.`
+      : (G.L.capstone && stars && !S.catches) ? `Clean shift, but I needed to see you catch something.`
+      : `Not yet. Let's run it again — that's what orientation is for.`;
+    verdict = `<div class="beat in"><img src="${nurseImg(preIdx())}" alt=""><div><b>${esc(preName())}</b><p>${pre}</p></div></div>`
+      + (chapterDone ? `<div class="newskill"><span>💌</span><div><b>CHAPTER 1 COMPLETE</b><p>The residents left a card at the station: “To our new nurse.” Mae signed it “Evelyn.”</p></div></div>` : '');
+  }
 
   sceneEl.className = 'scene';
   sceneEl.innerHTML = `<div class="layer kb"><img src="${stars||G.mode==='endless' ? IMG.give : IMG.hall}" alt=""></div><div class="layer end-shade"></div>
@@ -1706,10 +1763,11 @@ function endShift(completed){
     <div class="end-title"><div class="et">${title}<small>${sub}</small></div>
     ${G.mode!=='endless' ? `<div class="stars">${[0,1,2].map(k=>`<span class="${k<stars?'on':''}" style="animation-delay:${.35+k*.25}s">★</span>`).join('')}</div>` : ''}
     ${isBest ? '<div class="newbest">NEW BEST!</div>' : ''}</div>`;
-  const nextL = G.mode==='career' && G.L.idx < LEVELS.length-1 && unlocked(G.L.idx+1) ? LEVELS[G.L.idx+1] : null;
+  const nextL = G.mode==='career' && G.L.idx < LEVELS.length-1 && unlocked(G.L.idx+1) ? LEVELS[G.L.idx+1]
+    : G.mode==='story' && G.L.idx < STORY.length-1 && storyUnlocked(G.L.idx+1) ? G.L.idx+1 : null;
   const rankLine = rkAfter.k > rkBefore.k ? `<div class="rankup">🎖️ New title: <b>${rkAfter.name}</b>!</div>` : '';
   const xpPct = rkAfter.next ? Math.round((SAVE.xp - rkAfter.xp)/(rkAfter.next.xp - rkAfter.xp)*100) : 100;
-  setSheet(`<div class="final"><small>FINAL SCORE</small><b id="final">0</b><span>${early ? `⏱ +${early} finished early · ` : ''}🪙 +${coins}${unlockedNext ? ' · 🔓 Level '+(G.L.num+1)+' unlocked!' : ''}</span></div>
+  setSheet(`<div class="final"><small>FINAL SCORE</small><b id="final">0</b><span>${early ? `⏱ +${early} finished early · ` : ''}🪙 +${coins}${unlockedNext ? (G.mode==='story' ? ' · 🔓 Shift ' : ' · 🔓 Level ')+(G.L.num+1)+' unlocked!' : ''}</span></div>
     ${rankLine}
     <div class="xprow"><span>${rkAfter.name}</span><span class="xpbar"><i style="width:${xpPct}%"></i></span><span>+${xpGain} XP</span></div>
     <div class="stats">
@@ -1719,11 +1777,12 @@ function endShift(completed){
       <div style="animation-delay:.25s"><b class="${S.missed?'badc':''}">${S.missed}</b><span>Gave up</span></div>
     </div>
     ${G.mode==='daily' ? `<div class="dgrid">${G.log.map(l=>({pass:'🟩',slip:'🟨',catch:'🟦',error:'🟥',miss:'⬛'})[l]).join('')}</div>` : ''}
-    <div class="msg">${verdict}</div>
+    ${G.mode === 'story' ? verdict : `<div class="msg">${verdict}</div>`}
     <div class="actions"><button class="btn ghost" id="menu" style="flex:0 0 22%">☰</button><button class="btn ${G.mode==='daily'?'gold':'ghost'}" id="share" style="flex:0 0 ${G.mode==='daily'?'38%':'22%'}">↗ ${G.mode==='daily'?'Share':''}</button>
-      ${nextL && stars ? `<button class="btn big pulse" id="next">Next ▸</button>` : `<button class="btn big ${G.mode==='daily'?'':'pulse'}" id="again">↻ ${G.mode==='daily'?'Again':'Retry'}</button>`}</div>`, 'scroll');
+      ${nextL != null && stars ? `<button class="btn big pulse" id="next">Next ▸</button>` : `<button class="btn big ${G.mode==='daily'?'':'pulse'}" id="again">↻ ${G.mode==='daily'?'Again':'Retry'}</button>`}</div>`, 'scroll');
 
   if (stars || G.mode==='endless') sfx.fanfare(); else sfx.bad();
+  if (signed) after(700, () => { banner('✅ SIGNED OFF', 'goldb', .3); confetti(chapterDone ? 90 : 40); });
   for (let k=0;k<stars;k++) after(350+k*250, () => sfx.star(k));
   if (rankLine) after(1100, sfx.rankup);
   if (stars >= 2 || isBest) after(500, () => confetti(50));
@@ -1731,16 +1790,461 @@ function endShift(completed){
   const f = now => { if (!fin.isConnected) return; const k = Math.min(1,(now-t0)/1200); fin.textContent = Math.round(to*(1-Math.pow(1-k,3))); if (k<1) requestAnimationFrame(f); };
   requestAnimationFrame(f);
   const mode = G.mode, L = G.L, log = G.log.slice();
-  $('#menu').onclick = () => mode==='career' ? showCareer() : showTitle();
-  if ($('#again')) $('#again').onclick = () => { audio(); mode==='career' ? showLevelIntro(L) : mode==='daily' ? showDailyIntro() : startShift('endless'); };
-  if ($('#next')) $('#next').onclick = () => { audio(); showLevelIntro(nextL); };
+  $('#menu').onclick = () => mode==='career' ? showCareer() : mode==='story' ? showStory() : showTitle();
+  if ($('#again')) $('#again').onclick = () => { audio(); mode==='career' ? showLevelIntro(L) : mode==='story' ? showStoryIntro(L.idx) : mode==='daily' ? showDailyIntro() : startShift('endless'); };
+  if ($('#next')) $('#next').onclick = () => { audio(); mode==='story' ? showStoryIntro(nextL) : showLevelIntro(nextL); };
   $('#share').onclick = async () => {
     const grid = log.map(l=>({pass:'🟩',slip:'🟨',catch:'🟦',error:'🟥',miss:'⬛'})[l]).join('');
     const text = mode==='daily'
       ? `MedPass Madness · Daily #${L.num} 🏥\n${'★'.repeat(stars)}${'☆'.repeat(3-stars)} · ${to} pts\n${grid}\n🔥 ${SAVE.streak.count}-day streak`
+      : mode==='story' ? (signed ? `Signed off on “${L.name}” in MedPass Madness 🩺 ${to} pts. Your move.` : `Survived “${L.name}” in MedPass Madness 🩺 ${to} pts.`)
       : mode==='career' ? `I got ${'★'.repeat(stars)||'0★'} on MedPass Madness level ${L.num} with ${to} points 💊 Can you beat it?` : `I scored ${to} in MedPass Madness Endless 💊 Can you beat it?`;
     try { if (navigator.share) await navigator.share({title:'MedPass Madness', text, url:SHARE_URL}); else { await navigator.clipboard.writeText(text+'\n'+SHARE_URL); toast('📋 Result copied — paste it anywhere!'); } } catch(e){}
   };
+}
+
+/* =========================================================
+   CAREER MODE · Chapter 1 "The New Hire" (Memory Care)
+   Fun leads, learning stays invisible: every lesson is a live
+   moment with a consequence, never a quiz screen.
+   ========================================================= */
+const CASTI = {mae:13, jim:0, jose:14, lena:11, henry:10, evelyn:3};       // ROSTER indices
+const CAST_ROOM = {mae:0, jim:1, jose:2, lena:3, henry:4, evelyn:5};        // 204 207 211 214 218 222
+const castRes = k => ROSTER[CASTI[k]];
+const DOC = 'Dr. Okafor';
+const preIdx = () => SAVE.story.preceptor == null ? 9 : SAVE.story.preceptor;
+const preName = () => { const n = NURSES[preIdx()].name; return /"Mo"/.test(n) ? 'Mo' : n.replace(/^Dr\. /,'').split(' ')[0]; };
+
+// In-room situations. r: good | meh (safe but slow) | bad (would have reached the resident)
+const MOMENTS = {
+  '1a': {res:'mae', title:'Who are you again?', scene:`You ask her name before the pass. She beams at you.`, say:'Evelyn! Obviously.', choices:[
+    {t:'💊 Give — she answered', r:'bad', why:`Mae can't reliably tell you her name. Wristband + MAR photo, every single time.`},
+    {t:'🪪 Check wristband + MAR photo', r:'good', as:'pass', why:`Wristband: Margaret Collins. MAR photo: Mae, mid-laugh. Right resident — meds in. She thanks you, “Evelyn.”`},
+    {t:'🗣️ Ask Dana who she is', r:'bad', why:`Dana's pretty sure — but a coworker's guess isn't an identifier. Wristband + photo.`}]},
+  '1b': {res:'jose', title:'Already signed?', scene:`Metformin 500 mg is already initialed for 0800 today. José swears on his mother he never got it.`, say:'I would remember, mijo! …Probably.', choices:[
+    {t:'💊 Give — he’d know', r:'bad', why:`It was given at 0812. That's a double dose. Verify before you repeat anything.`},
+    {t:'🔍 Hold & ask who initialed it', r:'good', as:'catch', why:`Night nurse: “Gave it at 0812 with his eggs.” José: “Ohhh. <i>That</i> pill.” Double dose dodged.`},
+    {t:'✂️ Give half, to be safe', r:'bad', why:`Half of a double dose is still extra medicine. Verify first.`}]},
+  '1c': {res:'lena', title:'Sign on the door', scene:`A sign on Lena's door: <b>NPO — swallow eval at 10:00</b>. Her 0900 pill is due.`, say:'Patience is a medicine too.', choices:[
+    {t:'💧 Give with a tiny sip', r:'bad', why:`NPO means nothing by mouth — not pills, not sips, not applesauce.`},
+    {t:'🛑 Hold & clarify the order', r:'good', as:'catch', why:`Held. Speech therapy clears her at 10:15 and you give it then. Lena nods like she knew all along.`},
+    {t:'🥄 Crush it in applesauce', r:'bad', why:`Applesauce is still by mouth. NPO is NPO.`}]},
+  '2a': {res:'jim', title:'New order, old allergy', scene:`New order: <b>Amoxicillin 500 mg</b>. Jim's band says <b>⚠ PENICILLIN</b>.`, say:'Antibiotics? Bring it on, champ.', choices:[
+    {t:'💊 Give — the doc ordered it', r:'bad', why:`Amoxicillin <i>is</i> a penicillin. A new order doesn't erase an allergy.`},
+    {t:'📞 Hold & call the provider', r:'good', as:'catch', why:`Provider switches him to a non-penicillin antibiotic. Jim: “You just saved my whole afternoon.”`},
+    {t:'💊 Give it with an antihistamine', r:'bad', why:`You don't pre-treat your way around an allergy. Hold and call.`}]},
+  '2b': {res:'jose', title:'“It’s only baby aspirin”', scene:`Aspirin 81 mg on the MAR. José's band: <b>⚠ ASPIRIN</b>.`, say:'Baby aspirin! For a baby! Is fine!', choices:[
+    {t:'💊 Low dose — give it', r:'bad', why:`A small dose of an allergen is still the allergen.`},
+    {t:'📞 Hold & call', r:'good', as:'catch', why:`Provider stops the aspirin. José celebrates with a victory cha-cha.`},
+    {t:'📅 Give every other day', r:'bad', why:`Changing the schedule doesn't change the allergy — and it's not your call to make.`}]},
+  '2c': {res:'evelyn', title:'Bingo in five', scene:`Evelyn (<b>⚠ SULFA</b>) is due Acetaminophen 500 mg. Bingo starts in five minutes.`, say:'Hurry, baby, my card is calling me!', choices:[
+    {t:'🛑 Hold — she has allergies', r:'meh', why:`Acetaminophen isn't a sulfa drug. Holding it just meant a sore Evelyn at bingo.`},
+    {t:'💊 Give — not a sulfa drug', r:'good', as:'pass', why:`Different drug class, no problem. She makes it to bingo with a minute to spare.`},
+    {t:'📞 Call pharmacy first', r:'meh', why:`Pharmacy: “…That's Tylenol.” Safe, but she missed the first round.`}]},
+  '3a': {res:'henry', title:'Feeling “fine”', scene:`Lisinopril 10 mg · <b>hold if SBP &lt; 100</b>. Henry's BP: <b>92/58</b>.`, say:'I feel fine. Just a little slow today.', choices:[
+    {t:'💊 He feels fine — give it', r:'bad', why:`92 is under the hold number. The order decides, not the vibes.`},
+    {t:'🛑 Hold, document, report', r:'good', as:'catch', why:`Held and reported. Henry presses a cherry tomato into your hand for your trouble.`},
+    {t:'✂️ Give half', r:'bad', why:`Splitting the dose isn't in the order. Hold it.`}]},
+  '3b': {res:'jim', title:'Close call?', scene:`Metoprolol 25 mg · <b>hold if HR &lt; 60</b>. Jim's HR: <b>64</b>.`, say:'Is my heart doing sports again?', choices:[
+    {t:'🛑 Hold to be safe', r:'meh', why:`64 is inside the order. Holding a med you're told to give is a miss too.`},
+    {t:'💊 Give — it’s within the order', r:'good', as:'pass', why:`Within parameters, given on time. Jim: “Clutch.”`},
+    {t:'⏰ Recheck in an hour', r:'meh', why:`Nothing to recheck — 64 is fine. Now his dose is late.`}]},
+  '3c': {res:'mae', title:'The cuff says 62', scene:`Digoxin 0.125 mg · <b>hold if APICAL HR &lt; 60</b>. The automatic cuff flashes a pulse of 62.`, say:'Is that thing taking my picture?', choices:[
+    {t:'💊 62 — good to go', r:'bad', why:`The order says <i>apical</i>. A full minute with the stethoscope says 56. That dose would have gone in.`},
+    {t:'🩺 Listen apically, full minute', r:'good', as:'catch', why:`Apical pulse: <b>56</b>. The cuff lied. Digoxin held and reported.`},
+    {t:'🛑 Just hold it', r:'meh', why:`You held without checking. This time the apical was 56 — but next time it might be 72.`}]},
+  '4a': {res:'lena', title:'Applesauce situation', scene:`Lena takes her meds crushed in applesauce. Up next: <b>Metoprolol ER 25 mg</b>.`, say:'Do what you must, child.', choices:[
+    {t:'🥄 Crush it — order says crushed', r:'bad', why:`Crushing extended-release dumps the whole day's dose at once.`},
+    {t:'📞 Don’t crush — call pharmacy', r:'good', as:'catch', why:`Pharmacy swaps in a form she can take. Lena: “You listen to the little letters. Good.”`},
+    {t:'✂️ Cut it in half', r:'bad', why:`Splitting an ER tablet breaks the slow release too.`}]},
+  '4b': {res:'mae', title:'Crushable?', scene:`Mae needs Sertraline 50 mg crushed. It's a plain immediate-release tablet.`, say:'Is it dessert? It looks like dessert.', choices:[
+    {t:'📞 Call pharmacy first', r:'meh', why:`Pharmacy: “Yep, crush away.” Safe — just two minutes you didn't have.`},
+    {t:'🥄 Crush & give in applesauce', r:'good', as:'pass', why:`Immediate-release, crush order, done. Mae: “Best dessert all week.”`},
+    {t:'🛑 Hold it', r:'meh', why:`Nothing wrong with this one. Now she's missed a dose.`}]},
+  '4c': {res:'lena', title:'Cough after every spoonful', scene:`Halfway through the applesauce, Lena starts coughing after every spoonful.`, say:`*cough* I'm fine *cough*`, choices:[
+    {t:'🥄 Keep going, slowly', r:'bad', why:`Coughing with swallowing can mean food going down the wrong way. Pushing on risks aspiration.`},
+    {t:'🪑 Stop, sit her up, assess & notify', r:'good', as:'catch', why:`Upright, breathing easy, swallow study requested. Lena squeezes your hand.`},
+    {t:'💧 Chase it with water', r:'bad', why:`Thin liquids are often <i>harder</i> to swallow safely. Stop and assess.`}]}
+};
+// Dana (CNA) reports. best: assess | delegate | note
+const REPORTS = {
+  R1: {res:'jim', line:`Jim's way more confused than this morning. He keeps pulling at his shirt.`, best:'assess',
+       finding:`Temp <b>100.9°F</b>, tugging at his clothes, urine dark and strong-smelling. Not his baseline.`, done:`You call it in — the provider orders a urine test. Jim: “Who won?”`, sbar:'B'},
+  R2: {res:'henry', line:`Henry's BP was 88/54 when I did vitals.`, best:'assess',
+       finding:`Your recheck: <b>88/54</b>, dizzy when he stands. His lisinopril is due.`, done:`Lisinopril held, provider notified, fluids pushed. Henry: “I'll bring you a bigger tomato.”`, sbar:'A'},
+  R3: {res:'evelyn', line:`Evelyn's on the floor by her bed. I didn't move her.`, best:'assess',
+       finding:`Alert, small bruise on her left hip, moves both legs without new pain. You check her <i>before</i> anyone lifts her.`, done:`Provider notified, fall follow-up started per protocol. Evelyn: “Did I miss bingo?”`, sbar:'C'},
+  R4: {res:'mae', line:`Mae only ate a few bites of breakfast.`, best:'note', ok:['assess'],
+       noteReply:`Got it — I'll save her lunch tray so you can see how she does.`, finding:`Mae's fine, just not hungry. You'll watch lunch.`, done:`You'll track her intake today. Mae: “Is it dessert yet?”`},
+  R5: {res:'jose', line:`José's bottom is red and it didn't fade when I pressed.`, best:'assess',
+       finding:`A reddened spot on his sacrum that doesn't blanch — an early pressure injury.`, done:`Turning schedule, cushion, report. José: “Two-hour salsa breaks. I can do that.”`},
+  R6: {res:'lena', line:`Lena coughed a lot drinking her water.`, best:'assess',
+       finding:`She coughs on thin liquids but breathes easy between sips.`, done:`Thin liquids paused, swallow eval requested.`},
+  R7: {res:'henry', line:`Want me to recheck Henry's vitals at 1400? He was a little low earlier.`, best:'delegate', ok:['assess'],
+       delegateReply:`Henry's 1400 BP: 118/72.`, finding:`Henry's fine right now.`, done:`All good — and Dana will grab the 1400 numbers.`},
+  R8: {res:'jim', line:`Jim says he doesn't want his pills today.`, best:'assess',
+       finding:`You sit with Jim and talk playoffs for a minute.`, done:`He takes them on the second try. If he hadn't, you'd document the refusal and let the provider know.`}
+};
+// Interruptions during the bedside check
+const INTERRUPTS = {
+  I1: {icon:'📞', text:`The station phone is ringing off the hook.`, safe:`Finish this check first`, unsafe:`Leave the cup, grab the phone`, oops:`You come back. José is holding the med cup like a trophy. 😬`, coach:`Meds never sit unattended.`},
+  I2: {icon:'👨‍👩‍👧', text:`A visitor reaches for the cup: “I'll give Dad his pills for you!”`, safe:`Kindly decline — you’ll give it`, unsafe:`Hand them the cup`, oops:`Dad got… somebody's cup. You restart from scratch, heart pounding.`, coach:`You give it, you see it taken.`},
+  I3: {icon:'🧑🏽‍⚕️', text:`Dana: “I need a hand with this lift, right now!”`, safe:`Lock cart, help, then restart the check`, unsafe:`Help, then give without rechecking`, oops:`You almost gave it on autopilot. Back to row one.`, coach:`Interrupted? Start the check over.`, restart:true},
+  I4: {icon:'🔔', text:`Someone down the hall is yelling “NURSE!”`, safe:`Secure the meds, go check, come back`, unsafe:`Leave the cup at the bedside`, oops:`The cup's gone when you get back. Somebody's very relaxed now.`, coach:`Meds stay with you unless there's an order for bedside meds.`},
+  I5: {icon:'🩺', text:`${DOC} stops you mid-pour to rattle off a new order.`, safe:`Pause, write it down, read it back`, unsafe:`Keep pouring while you listen`, oops:`You poured the wrong pill AND missed half the order.`, coach:`Read back every verbal order, per policy.`},
+  I6: {icon:'🔑', text:`A coworker asks to borrow your cart key “for one sec.”`, safe:`Keep your key, lock the cart`, unsafe:`Toss them the key`, oops:`Your cart is now somewhere on the 3rd floor.`, coach:`Your cart, your key.`}
+};
+// SBAR phone calls: S B A R + one distractor X
+const SBAR = {
+  A: {res:'henry', intro:`Henry's BP is 88/54 and he's dizzy. Time to call ${DOC}.`,
+      S:`Henry in 218: BP 88/54, dizzy standing. I'm holding his lisinopril.`, B:`80, dementia, BP med daily. Barely eating or drinking for 2 days.`,
+      A:`Looks dry. Alert as usual, no chest pain.`, R:`Can you see him today? OK to keep holding and recheck in an hour?`, X:`He grows amazing tomatoes.`,
+      xReply:`…Why are you telling me about tomatoes?`, reply:`${DOC}: “Good call. Hold it, push fluids, recheck in an hour. I'll see him this afternoon.”`},
+  B: {res:'jim', intro:`Jim's running a fever and he's way off baseline. Call ${DOC}.`,
+      S:`Jim in 207 is way more confused than baseline since lunch.`, B:`78, dementia, penicillin allergy. Usually chatty about sports.`,
+      A:`Temp 100.9°F, pulling at his clothes, dark strong urine.`, R:`Can you evaluate him? Do you want a urine test?`, X:`His team lost last night.`,
+      xReply:`I'm sorry about his team. What else?`, reply:`${DOC}: “Get a urine sample and push fluids. Watch the penicillin allergy if we start antibiotics. Nice report.”`},
+  C: {res:'evelyn', intro:`Evelyn fell. You've checked her. Now call ${DOC}.`,
+      S:`Evelyn in 222 was found on the floor about 10 minutes ago.`, B:`80, dementia, sulfa allergy, walks with a walker.`,
+      A:`Alert, small bruise left hip, moves legs fine, vitals stable. Not moved before I checked.`, R:`Can you evaluate her? Do you want neuro checks or an X-ray?`, X:`Bingo starts at two.`,
+      xReply:`I'll make bingo some other time. Focus.`, reply:`${DOC}: “Neuro checks per protocol and a hip X-ray. Textbook call.”`}
+};
+const SBAR_HINT = {S:`Wait — what's going on? Start with the situation.`, B:`Okay… and who is this resident?`, A:`What did you actually find?`, R:`So what do you need from me?`};
+
+const STORY = [
+  {name:'Who Are You Again?', icon:'🪪', n:7, time:165, maxActive:2, patience:54, spawnEvery:8.5, kinds:['std'], trapRate:.22, pool:['patient','time','route'], rush:[],
+   moments:['1a','1b','1c'], beat:{who:'pre', line:`Six residents, one hallway, one routine. They'll learn your face before you learn their meds.`},
+   tip:`Mae will tell you she's someone else. She's very convincing.`},
+  {name:'Allergic to Surprises', icon:'⚠️', n:8, time:175, maxActive:3, patience:50, spawnEvery:8, kinds:['std'], trapRate:.35, pool:['allergy','allergy','patient','time'], rush:[.5],
+   moments:['2a','2b','2c'], beat:{who:'mae', line:`Now who are you again, sugar? …Oh! The one with the nice cart.`},
+   tip:`Everybody here is allergic to something. Read the band, then read the bottle.`},
+  {name:'Pressure’s Dropping', icon:'❤️', n:8, time:180, maxActive:3, patience:48, spawnEvery:7.5, kinds:['std','vitals'], focus:'vitals', trapRate:.18, pool:['patient','time','route','allergy'], rush:[.5],
+   moments:['3a','3b','3c'], beat:{who:'jose', line:`Pill time? I didn't forget — I postponed! Now… salsa lesson?`},
+   tip:`Heart and BP meds come with hold numbers. The order decides, not the vibes.`},
+  {name:'Don’t Crush It', icon:'🥄', n:8, time:180, maxActive:3, patience:48, spawnEvery:7.5, kinds:['std','crush'], focus:'crush', trapRate:.18, pool:['patient','time','allergy'], rush:[.5],
+   moments:['4a','4b','4c'], beat:{who:'henry', line:`A cherry tomato from the courtyard. For checking my pressure so carefully.`},
+   tip:`Applesauce: great. Crushed extended-release: a whole day of medicine at once.`},
+  {name:'Dana Saw Something', icon:'🗣️', n:7, time:200, maxActive:3, patience:48, spawnEvery:8, kinds:['std','vitals'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.6],
+   events:[{at:.12,id:'R1'},{at:.4,id:'R4'},{at:.62,id:'R3'}], beat:{who:'lena', line:`Dana watches everyone. Listen to her — she sees things.`},
+   tip:`Dana tells you what she saw. Deciding what it means? That's on you.`},
+  {name:'Everybody Wants You', icon:'📞', n:8, time:200, maxActive:3, patience:46, spawnEvery:7, kinds:['std','vitals','crush'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.35,.7],
+   ints:['I1','I2','I3'], events:[{at:.45,id:'R7'}], beat:{who:'evelyn', line:`I won bingo TWICE. Can I have my two o'clock pills early so I don't miss round three?`},
+   tip:`Phones, visitors, coworkers. Finish or lock down what's in your hands first.`},
+  {name:'Call the Doc', icon:'☎️', n:8, time:220, maxActive:3, patience:46, spawnEvery:7, kinds:['std','vitals','crush'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.5],
+   sbar:['A'], events:[{at:.3,id:'R1'},{at:.7,id:'R8'}], ints:['I4'], beat:{who:'jim', line:`My grandson visits tomorrow. Tell him I'm sharp as ever, okay?`},
+   tip:`When you call ${DOC}: what's happening, who they are, what you found, what you need. Skip the tomatoes.`},
+  {name:'Flying Solo', icon:'✅', n:9, time:245, maxActive:4, patience:44, spawnEvery:6.5, kinds:['std','vitals','crush'], trapRate:.2, pool:['patient','time','route','allergy'], rush:[.3,.6,.85],
+   moments:'mix', events:[{at:.3,id:'R3'},{at:.62,id:'R5'}], ints:['I5','I6'], capstone:true,
+   beat:{who:'pre', line:`Last orientation shift. Same rules as day one — every check, every time.`}, tip:`No hand-holding tonight. Show them what you've got.`}
+];
+const storyCfg = i => { const S = STORY[i]; return {...S, idx:i, num:i+1, t2:S.n*190, t3:S.n*250}; };
+const storyUnlocked = i => i === 0 || (SAVE.story.stars[i-1]||0) >= 1;
+const storyKey = k => typeof k === 'string' && k.startsWith('m_') && !!(MOMENTS[k.slice(2)] || REPORTS[k.slice(2)] || INTERRUPTS[k.slice(2)]);
+const REMATCH_KIND = {patient:'std', time:'std', route:'std', allergy:'std', pick:'std', falseFlag:'std', vitals:'vitals', er:'crush', crushOk:'crush', hypo:'insulin', prnTime:'prn'};
+
+function storyFloor(){
+  const cast = Object.keys(CAST_ROOM), guests = shuffle(ROSTER.filter(r => !Object.values(CASTI).includes(r.i))).slice(0, 2);
+  const floor = []; cast.forEach(k => floor[CAST_ROOM[k]] = castRes(k)); floor[6] = guests[0]; floor[7] = guests[1];
+  return floor;
+}
+const momentItem = id => ({room:CAST_ROOM[MOMENTS[id].res], kind:'moment', task:{kind:'moment', id, due:'now'}});
+function storyPlan(cfg){
+  let ms = cfg.moments === 'mix' ? shuffle(['1a','1c','2a','3c','4a','4c']).slice(0, 2) : (cfg.moments || []).slice();
+  const specials = [...ms.map(momentItem), ...(cfg.sbar||[]).map(id => ({room:CAST_ROOM[SBAR[id].res], kind:'sbar', task:{kind:'sbar', id, due:'now'}}))];
+  const meds = [];
+  for (let k = 0; k < cfg.n - specials.length; k++){
+    const ri = rnd(8), res = G.floor[ri];
+    const kind = (k === 1 && cfg.focus) ? cfg.focus : chooseKind(res);
+    meds.push({room:ri, kind, task:makeTask(res, kind)});
+  }
+  const plan = meds.slice();
+  specials.forEach((s, j) => plan.splice(Math.min(plan.length, Math.round((j+1) * (meds.length+1) / (specials.length+1)) + j), 0, s));
+  return plan;
+}
+function injectRematches(plan){
+  if (!plan) return;
+  let used = 0;
+  for (const card of deckDue()){
+    if (used >= 2) break;
+    const k = card.k;
+    if (k.startsWith('m_')){
+      if (G.mode !== 'story') continue;
+      const id = k.slice(2);
+      if (MOMENTS[id]){
+        const have = plan.find(p => p.task.id === id);
+        if (have){ have.task.rematch = k; used++; continue; }
+        const i = plan.findIndex(p => p.kind === 'std' && !p.task.rematch); if (i < 0) continue;
+        plan[i] = momentItem(id); plan[i].task.rematch = k; used++;
+      } else if (INTERRUPTS[id] && !G.intq.includes(id)){ G.intq.push(id); G.intRematch.add(id); used++; }
+      else if (REPORTS[id] && !G.events.some(e => e.id === id)){ G.events.push({at:.5, id, rematch:k}); G.events.sort((a,b) => a.at - b.at); used++; }
+      continue;
+    }
+    const kind = REMATCH_KIND[k];
+    if (!kind || !G.kinds.includes(kind)) continue;
+    const i = plan.findIndex(p => p.kind === kind && !p.task.rematch && (k !== 'allergy' || ALLERGY_ORDERS[G.floor[p.room].allergy]) && (k !== 'patient' || G.floor.some(x => x !== G.floor[p.room] && x.sex === G.floor[p.room].sex)));
+    if (i < 0) continue;
+    plan[i].task = makeTask(G.floor[plan[i].room], kind, k); plan[i].task.rematch = k; used++;
+  }
+}
+function winRematch(k){ if (G && k) (G.won || (G.won = [])).push(k); }
+function promoteRematches(list){
+  const today = todayKey(), gaps = [1, 3, 7, 14];
+  for (const k of list || []){
+    const card = SAVE.deck.find(x => x.k === k); if (!card) continue;
+    card.box = (card.box||0) + 1;
+    if (card.box >= gaps.length) SAVE.deck.splice(SAVE.deck.indexOf(card), 1);
+    else card.due = addDays(today, gaps[card.box]);
+  }
+}
+
+/* ---------- Preceptor ---------- */
+const PRE_LINES = {
+  catch:`Holding was the right call. Nobody gets in trouble for asking.`,
+  pass:`Smooth. That's how it's done.`,
+  bad:`That one would've reached the resident. Look at what it was telling you.`,
+  report:`That's what Dana's for. Good catch, both of you.`,
+  sbar:`Clean call. ${DOC} actually said thank you — rare.`
+};
+function mentor(line){
+  if (!G || G.mode !== 'story') return;
+  toast(`<img class="tav" src="${nurseImg(preIdx())}" alt=""> <b>${esc(preName())}:</b> ${line}`);
+}
+function mentorOnce(kind){ if (!G || G.mode !== 'story') return; G.mentorSaid = G.mentorSaid || {}; if (G.mentorSaid[kind]) return; G.mentorSaid[kind] = 1; after(1300, () => mentor(PRE_LINES[kind])); }
+
+/* ---------- Story outcomes ---------- */
+function resolveStory(c, r, text, o = {}){
+  phase();
+  const p = sceneCenter(.55), b = $('#bigres');
+  if (r === 'good'){
+    const catchy = o.as === 'catch';
+    G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak); G.served++; G.sx.good++;
+    if (catchy) G.stats.catches++; else G.stats.passes++;
+    G.log.push(catchy ? 'catch' : 'pass');
+    const pts = (o.pts || 200) + G.streak*15 + Math.round(60*(c.arriveFrac||0)); addScore(pts);
+    if (c.task.rematch) winRematch(c.task.rematch);
+    if (b) b.classList.add(catchy ? 'held' : 'give');
+    outcomeSheet(`<div class="sheet-h"><span>${esc(o.title || 'Your call')}</span><b class="${catchy?'goldc':'okc'}">${catchy ? 'CAUGHT IT' : 'NAILED IT'}</b></div>
+      <div class="msg">${catchy ? '🛡️' : '✅'} ${text}</div><div class="tally"><div class="trow total"><span>${c.task.rematch ? '🔁 Rematch won' : 'Smart call'}</span><b>+${pts}</b></div></div>`);
+    (catchy ? sfx.shield : sfx.fanfare)(); vib(25);
+    banner(c.task.rematch ? 'REMATCH WON!' : catchy ? 'GREAT CATCH!' : 'NAILED IT!', catchy ? 'goldb' : 'good', .5);
+    burst(p.x, p.y, 22, catchy ? ['#fbbf24','#fde68a','#ffffff'] : undefined); floatText('+'+pts, 'gold', p.x, p.y+56, 1400); renderStreak(true);
+    if (G.streak >= 3) confetti(20);
+    if (c.res && c.res.thanks) say(pickUI(c.res.thanks));
+    mentorOnce(o.mentor || (catchy ? 'catch' : 'pass'));
+  } else if (r === 'meh'){
+    G.served++; G.stats.slips++; G.streak = 0; renderStreak(); G.log.push('slip'); addScore(25);
+    outcomeSheet(`<div class="sheet-h"><span>${esc(o.title || 'Your call')}</span><b>SAFE, BUT…</b></div>
+      <div class="msg">🤏 ${text}</div><div class="tally"><div class="trow total"><span>Nobody hurt</span><b>+25</b></div></div>`);
+    sfx.bad(); banner('HMM…', '', .5); say(pickUI(['Hmm.', 'Well, alright.', 'If you say so.']));
+  } else {
+    G.stats.unsafe++; G.sx.bad++; G.streak = 0; renderStreak(); G.log.push('error'); addScore(-100);
+    if (o.key) logMistake(c, o.key);
+    if (b) b.classList.add('held');
+    outcomeSheet(`<div class="sheet-h"><span>${esc(o.title || 'Your call')}</span><b class="badc">YIKES</b></div>
+      <div class="msg">⚠️ ${text}<br><small style="color:var(--muted)">🔁 This one's going in your rematch pile.</small></div><div class="tally"><div class="trow total neg"><span>Would have reached the resident</span><b>−100</b></div></div>`);
+    sfx.bad(); shake(); banner('YIKES!', 'bad', .5); floatText('−100', 'bad', p.x, p.y+56, 1400); say('Oh dear…');
+    mentorOnce('bad');
+  }
+}
+function stepMoment(c){
+  const m = MOMENTS[c.task.id];
+  after(800, () => say(m.say));
+  const order = shuffle(m.choices.map((_, i) => i));
+  setSheet(`<div class="sheet-h"><span>❗ ${esc(m.title)}</span><b>${c.task.rematch ? '🔁 Rematch' : 'Your call'}</b></div>
+    <div class="msg sit">${m.scene}</div>
+    <div class="choices">${order.map(i => `<button class="btn ghost choice" data-i="${i}">${m.choices[i].t}</button>`).join('')}</div>`, 'scroll');
+  sheetEl.querySelectorAll('.choice').forEach(b => b.onclick = () => {
+    if (!G.active) return;
+    const ch = m.choices[+b.dataset.i];
+    resolveStory(c, ch.r, ch.why, {as:ch.as, key:'m_'+c.task.id, title:m.title});
+  });
+}
+function stepReport(c){
+  const r = REPORTS[c.task.id], useSbar = G.L.idx >= 6 && r.sbar;
+  setSheet(`<div class="sheet-h"><span>🔎 Checking on ${esc(c.res.first)}</span><b class="${c.task.late?'badc':''}">${c.task.late ? 'LATE' : 'Assess'}</b></div>
+    <div class="msg sit">${r.finding}</div>
+    <div class="actions"><button class="btn big green pulse" id="act">${useSbar ? '📞 Call '+DOC : r.best === 'assess' ? '📞 Call it in' : '👍 Got it'}</button></div>`);
+  $('#act').onclick = () => {
+    if (!G.active) return;
+    if (useSbar) return stepSbar(c, r.sbar);
+    resolveStory(c, 'good', r.done, {as:'catch', title:'Dana’s report', pts:150, mentor:'report'});
+  };
+}
+function stepSbar(c, id){
+  phase(); G.view = 'visit';
+  const S = SBAR[id], order = ['S','B','A','R'], names = {S:'Situation', B:'Background', A:'Assessment', R:'Recommendation'};
+  const cards = shuffle(['S','B','A','R','X']); let k = 0; const t0 = performance.now();
+  setSheet(`<div class="sheet-h"><span>📞 ${DOC} on the line</span><b id="sbk">0/4</b></div>
+    <div class="note" style="margin:0 0 8px">${S.intro}</div>
+    <div class="sbar-slots">${order.map(l => `<div class="slot" data-l="${l}"><b>${l}</b><span>${names[l]}</span></div>`).join('')}</div>
+    <div class="sbar-cards">${cards.map(l => `<button class="scard" data-l="${l}">${esc(S[l])}</button>`).join('')}</div>`, 'scroll');
+  sheetEl.querySelectorAll('.scard').forEach(btn => btn.onclick = () => {
+    if (!G.active || btn.disabled) return;
+    const l = btn.dataset.l, want = order[k];
+    if (l === want){
+      btn.disabled = true; btn.classList.add('used'); sfx.pick();
+      sheetEl.querySelector(`.slot[data-l="${l}"]`).classList.add('on'); k++; $('#sbk').textContent = k+'/4';
+      if (k === 4){
+        const secs = (performance.now() - t0)/1000, bonus = Math.max(0, Math.round(160 - secs*8));
+        G.sx.sbar = (G.sx.sbar||0) + 1;
+        after(350, () => resolveStory(c, 'good', S.reply, {as:'catch', title:'SBAR call', pts:250 + bonus, mentor:'sbar'}));
+      }
+    } else if (l === 'X'){
+      btn.disabled = true; btn.classList.add('nope'); addScore(-20); sfx.bad();
+      toast(`📞 ${DOC}: “${S.xReply}” · −20`, 'bad');
+    } else {
+      btn.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}], {duration:220});
+      addScore(-15); sfx.bad(); toast(`📞 ${DOC}: “${SBAR_HINT[want]}”`, 'bad');
+    }
+  });
+}
+
+/* ---------- Interruptions (during the bedside check) ---------- */
+function maybeInterrupt(c){
+  if (!G || G.mode !== 'story' || !G.intq.length || c.intDone) return;
+  if (!(Math.random() < .75 || G.plan.length <= G.intq.length + 1)) return;
+  c.intDone = true;
+  after(700, () => { if (!G || G.visit !== c || !G.intq.length) return; showInterrupt(c, G.intq.shift()); });   // only used up once it's actually on screen
+}
+function showInterrupt(c, id){
+  const I = INTERRUPTS[id], o = document.createElement('div'), isRe = G.intRematch.has(id);
+  o.className = 'intr';
+  const opts = shuffle([['safe', I.safe], ['unsafe', I.unsafe]]);
+  o.innerHTML = `<div class="intr-h">${I.icon} ${isRe ? '🔁 REMATCH · ' : ''}INTERRUPTION!</div><p>${I.text}</p>
+    <div class="intr-a">${opts.map(([k, t]) => `<button class="btn ghost" data-k="${k}">${t}</button>`).join('')}</div>`;
+  sheetEl.appendChild(o); sfx.rush(); vib([30,30,30]);
+  o.querySelectorAll('button').forEach(b => b.onclick = () => {
+    if (!G.active) return;
+    if (b.dataset.k === 'safe'){
+      addScore(50); sfx.good(); const p = elCenter(b); floatText('+50 Cool head', 'good', p.x, p.y-20);
+      if (isRe) winRematch('m_'+id);
+      mentor(I.coach); o.remove();
+      if (I.restart) stepRights(c);
+    } else {
+      addScore(-75); G.streak = 0; renderStreak(); G.stats.slips++; c.slip = true; sfx.bad(); shake();
+      logMistake(c, 'm_'+id);
+      o.innerHTML = `<div class="intr-h">😬 OOPS</div><p>${I.oops}</p><div class="intr-a"><button class="btn green" id="redo">↩ Restart the check</button></div>`;
+      o.querySelector('#redo').onclick = () => { o.remove(); stepRights(c); };
+    }
+  });
+}
+
+/* ---------- Dana's reports on the hallway map ---------- */
+function fireEvent(ev){
+  G.danaQ.push(ev);
+  if (G.view === 'hub') renderDana(); else toast('🗣️ <b>Dana</b> is looking for you…');
+}
+function renderDana(){
+  if (!G || G.view !== 'hub' || !MAP) return;
+  let el = $('#dana');
+  if (!G.dana && G.danaQ.length) G.dana = G.danaQ.shift();
+  if (!G.dana){ if (el) el.remove(); return; }
+  if (el && el.dataset.id === G.dana.id) return;
+  const r = REPORTS[G.dana.id], res = castRes(r.res);
+  if (!el){ el = document.createElement('div'); el.id = 'dana'; el.className = 'dana'; MAP.el.appendChild(el); sfx.chime(); vib(15); }
+  el.dataset.id = G.dana.id;
+  el.innerHTML = `<div class="dana-h"><span class="dav">🧑🏽‍⚕️</span><div><b>Dana · CNA</b><small>about ${esc(res.call)} · Rm ${ROOMS[CAST_ROOM[r.res]].num}${G.dana.rematch ? ' · 🔁 rematch' : ''}</small></div></div>
+    <p id="danaLine">“${esc(r.line)}”</p>
+    <div class="dana-a"><button data-a="assess">🔎 Assess now</button><button data-a="delegate">📏 Recheck vitals</button><button data-a="note">📝 Later</button></div>`;
+  el.querySelectorAll('button').forEach(b => b.onclick = () => danaChoice(b.dataset.a));
+}
+function queueSpecial(resKey, task){ G.special.push({room:CAST_ROOM[resKey], task:{due:'now', ...task}}); trySpecial(); }
+function trySpecial(){
+  for (const s of G.special.slice()){
+    if (G.calls.some(c => c.room === s.room) || (G.visit && G.visit.room === s.room)) continue;
+    const max = G.patienceBase * (s.task.late ? .6 : .95);
+    G.calls.push({id:++G.cid, res:G.floor[s.room], room:s.room, task:s.task, patience:max, max});
+    G.special = G.special.filter(x => x !== s); sfx.chime();
+    if (G.view === 'hub' && MAP){ const p = elCenter(MAP.rooms[s.room]); floatText('🔎', '', p.x, p.y-40, 900); }
+    else toast(`🔎 ${esc(G.floor[s.room].call)} needs you to take a look`);
+  }
+}
+function danaChoice(a){
+  if (!G || !G.active || !G.dana) return;
+  const ev = G.dana, r = REPORTS[ev.id], res = castRes(r.res), el = $('#dana');
+  const line = t => { const p = $('#danaLine'); if (p) p.innerHTML = t; };
+  if (a === r.best || (r.ok || []).includes(a)){
+    const best = a === r.best; addScore(best ? 100 : 50); sfx.good(); G.sx.good++;
+    if (el){ const p = elCenter(el); floatText(best ? '+100 Good call' : '+50', 'good', p.x, p.y-30); }
+    if (a === 'assess') queueSpecial(r.res, {kind:'report', id:ev.id, rematch:best ? ev.rematch : null});
+    else if (a === 'note') toast(`🗣️ Dana: “${r.noteReply}”`);
+    else if (a === 'delegate'){ toast(`🗣️ Dana: “On it.”`); G.esc.push({t:G.clock + 16, fn:() => { toast(`🗣️ Dana: “${r.delegateReply}” · you review it · +50`); addScore(50); }}); }
+    if (best && ev.rematch && a !== 'assess') winRematch(ev.rematch);
+    G.dana = null; renderDana();
+  } else if (a === 'delegate' && r.best === 'assess'){
+    addScore(-25); sfx.bad();
+    line(`“I can take the numbers, but I can't assess ${esc(res.first)} — that's you.”`);
+    if (el) el.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}], {duration:220});
+  } else if (r.best === 'assess'){
+    toast(`🗣️ Dana: “…Okay.”`); G.sx.reportsBad++; logMistake({task:{kind:''}}, 'm_'+ev.id);
+    G.dana = null; renderDana();
+    G.esc.push({t:G.clock + 18, fn:() => { toast(`🚨 Dana: “${esc(res.first)}'s getting worse — I need you NOW!” · −100`, 'bad'); addScore(-100); sfx.bad(); vib([80,40,80]); queueSpecial(r.res, {kind:'report', id:ev.id, late:true}); }});
+  } else {
+    addScore(-25); sfx.bad(); toast(`🗣️ Dana: “So… nobody's following up on that?” · −25`, 'bad');
+    G.dana = null; renderDana();
+  }
+}
+function storyTick(){
+  const prog = 1 - G.time/G.total, idle = G.spawned >= G.n && G.calls.length === 0 && !G.visit;
+  if (G.events.length && (prog >= G.events[0].at || (idle && !G.dana && !G.danaQ.length && !G.special.length && !G.esc.length))) fireEvent(G.events.shift());
+  if (G.esc.length) G.esc = G.esc.filter(e => { if (G.clock >= e.t){ e.fn(); return false; } return true; });
+  if (G.special.length) trySpecial();
+  if (G.view === 'hub' && (G.dana || G.danaQ.length) && !$('#dana')) renderDana();
+}
+const storyBusy = () => !!(G && G.mode === 'story' && (G.events.length || G.esc.length || G.special.length || G.dana || G.danaQ.length));
+
+/* ---------- Career screens ---------- */
+function showPreceptorPick(first){
+  phase(); leaveShift(); menuScene('🩺 Pick your preceptor', 'They’ll have your back all chapter');
+  let sel = SAVE.story.preceptor;
+  const pool = NURSES.map((n, i) => i).filter(i => i !== SAVE.nurse);
+  if (sel == null || sel === SAVE.nurse) sel = pool.includes(9) ? 9 : pool[0];
+  setSheet(`${first ? '' : `<div class="topline">${backBtn()}<span></span></div>`}
+    <div class="avgrid">${pool.map(i => `<button class="av ${sel===i?'sel':''}" data-i="${i}"><img src="${nurseImg(i)}" alt="${esc(NURSES[i].name)}"><span>${esc(NURSES[i].name.replace(/^Dr\. /,'').replace(/ "Mo"/,''))}<br><small>${NURSES[i].spec}</small></span></button>`).join('')}</div>
+    <button class="btn big pulse" id="save">✓ ${first ? 'Start orientation' : 'Save'}</button>`, 'scroll');
+  sheetEl.querySelectorAll('.av').forEach(b => b.onclick = () => { sel = +b.dataset.i; sfx.queue(); sheetEl.querySelectorAll('.av').forEach(x => x.classList.toggle('sel', x === b)); });
+  if ($('#back')) $('#back').onclick = showStory;
+  $('#save').onclick = () => { SAVE.story.preceptor = sel; persist(); sfx.good(); audio(); first ? showStoryIntro(0) : showStory(); };
+}
+function showStory(){
+  phase(); leaveShift();
+  if (!SAVE.story.seen) return showFraming('story');
+  if (SAVE.story.preceptor == null || SAVE.story.preceptor === SAVE.nurse) return showPreceptorPick(true);
+  menuScene('🩺 Career', 'Chapter 1 · The New Hire');
+  const st = SAVE.story, due = deckDue().length, next = STORY.findIndex((_, i) => storyUnlocked(i) && !(st.stars[i] > 0));
+  const signed = STORY.filter((_, i) => st.signoffs[i]).length;
+  setSheet(`<div class="topline">${backBtn()}<span class="coins">✅ ${signed}/8</span></div>
+    ${st.done ? `<div class="newskill"><span>🎉</span><div><b>CLEARED FOR FULL ASSIGNMENT</b><p>Chapter 1 complete. Chapter 2 is on the way.</p></div></div>` : ''}
+    <button class="pchip pre" id="pre"><img src="${nurseImg(preIdx())}" alt=""><span><b>${esc(NURSES[preIdx()].name.replace(/ "Mo"/,''))}</b><small>Your preceptor · tap to change</small></span></button>
+    <div class="unit"><div class="unit-h"><span class="ui">🌸</span><div>Chapter 1 · The New Hire<small>Memory Care · earn your preceptor’s trust, then fly solo</small></div></div>
+      <div class="signoffs">${STORY.map((S, i) => { const ok = storyUnlocked(i), s = st.stars[i]||0;
+        return `<button class="so ${ok?'':'locked'} ${i===next?'nextup':''}" data-i="${i}" style="animation-delay:${i*.04}s"><b>${ok ? i+1 : '🔒'}</b><span>${S.icon} ${S.name}</span><em>${st.signoffs[i] ? '✅ ' : ''}<span class="s3">${[0,1,2].map(k => `<span class="${k<s?'':'off'}">★</span>`).join('')}</span></em></button>`; }).join('')}</div></div>
+    <div class="set-row"><b>🔁 Rematch pile · ${SAVE.deck.length}</b><p>${due ? `${due} rematch${due===1?' is':'es are'} ready to ambush you in your next shift.` : SAVE.deck.length ? 'Everything that got you is cooling off. It’ll be back.' : 'Anything that trips you up gets saved for a rematch.'}</p></div>
+    <div class="fine"><a href="#" id="about">About Career</a></div>`, 'scroll');
+  $('#back').onclick = showTitle;
+  $('#pre').onclick = () => { audio(); showPreceptorPick(false); };
+  $('#about').onclick = e => { e.preventDefault(); showFraming('story'); };
+  sheetEl.querySelectorAll('.so').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i;
+    if (!storyUnlocked(i)){ sfx.bad(); b.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}], {duration:200}); toast('Earn a ★ on the shift before it'); return; }
+    audio(); showStoryIntro(i);
+  });
+}
+function showStoryIntro(i){
+  phase(); leaveShift();
+  const L = storyCfg(i), b = L.beat;
+  menuScene(`${L.icon} Shift ${i+1}`, L.name);
+  const who = b.who === 'pre' ? {img:nurseImg(preIdx()), name:preName()+' · preceptor'} : {img:castRes(b.who).portrait, name:castRes(b.who).call};
+  const goals = ['no med errors'];
+  if (L.events && L.events.some(e => REPORTS[e.id].best === 'assess')) goals.push('don’t leave Dana hanging');
+  if (L.capstone) goals.push('catch at least one');
+  setSheet(`<div class="beat"><img src="${who.img}" alt=""><div><b>${esc(who.name)}</b><p>“${b.line}”</p></div></div>
+    <div class="goal"><div><b>${L.n}</b><span>residents</span></div><div><b>${fmt(L.time)}</b><span>shift</span></div><div><b>${L.maxActive}</b><span>calls at once</span></div></div>
+    ${b.who === 'pre' ? '' : `<div class="beat tip"><img src="${nurseImg(preIdx())}" alt=""><div><b>${esc(preName())}</b><p>${L.tip}</p></div></div>`}
+    <div class="targets"><div><span>✅ Sign-off: ${goals.join(' · ')}</span></div><div><span><span class="s">★★</span> Score ${L.t2}+ · <span class="s">★★★</span> ${L.t3}+ flawless</span></div></div>
+    <div class="actions"><button class="btn ghost" id="back" style="flex:0 0 30%">‹ Back</button><button class="btn big pulse" id="go">▶ Start shift</button></div>`, 'scroll');
+  $('#back').onclick = showStory;
+  $('#go').onclick = () => { audio(); startShift('story', L); };
 }
 
 /* ---------- Boot ---------- */
