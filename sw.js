@@ -1,5 +1,5 @@
 // MedPass Madness service worker — makes the game installable and playable offline.
-const VERSION = 'medpass-v3.0';
+const VERSION = 'medpass-v3.1';
 const CORE = [
   './', 'index.html', 'manifest.webmanifest', 'privacy.html',
   'assets/hallway.jpg', 'assets/door.jpg', 'assets/giving.jpg', 'assets/res1.jpg', 'assets/res2.jpg',

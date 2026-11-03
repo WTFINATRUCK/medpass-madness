@@ -138,6 +138,13 @@ button{font-family:inherit;color:inherit}
 .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .best-line{text-align:center;color:var(--muted);font-size:.82rem}
 .unit{margin-bottom:14px;animation:chipIn .3s both}
+.signoffs{display:grid;gap:6px}
+.so{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:.86rem;animation:chipIn .3s both}
+.so b{width:24px;height:24px;border-radius:50%;background:#24304f;display:grid;place-items:center;font-size:.75rem}
+.so em{font-style:normal;font-size:.7rem;color:var(--muted)}
+.frame-card{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;line-height:1.45}
+.frame-card p{font-size:.95rem;margin-bottom:10px}
+.frame-card .frame-fine{font-size:.8rem;color:var(--muted);margin:0}
 .unit-h{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:7px}
 .unit-h .ui{font-size:1.4rem}
 .unit-h small{color:var(--muted);font-weight:500;font-size:.72rem;display:block}
@@ -676,7 +683,7 @@ const GAVE = {
 };
 const SHORT = {patient:'WRONG PATIENT', time:'ALREADY GIVEN', route:'NPO', vitals:'OUT OF RANGE', prnTime:'TOO SOON', allergy:'ALLERGY', hypo:'LOW SUGAR', er:'DO NOT CRUSH'};
 
-/* ---------- Career ---------- */
+/* ---------- Arcade levels (internal mode id stays 'career' so v3 saves keep their stars) ---------- */
 const UNITS = [
   {name:'Memory Care', icon:'🌸', levels:[
     {n:5,  time:105, maxActive:2, patience:48, spawnEvery:9,   kinds:['std'], trapRate:.15, rush:[]},
@@ -718,9 +725,15 @@ function dailyConfig(key = todayKey()){
 
 /* ---------- Save ---------- */
 const SAVE_KEY = 'medpassSave2';
-const FRESH = () => ({ v:3, coins:0, stars:{}, best:{}, endlessBest:0, up:{shoes:0,manner:0,scanner:0,cart:0,coffee:0}, shifts:0,
-  nurse:null, nick:'', xp:0, streak:{count:0, last:'', freezes:1, week:''}, daily:{} });
-function normalize(s){ const f = FRESH(); s = s||{}; return {...f, ...s, v:3, up:{...f.up, ...(s.up||{})}, stars:{...(s.stars||{})}, best:{...(s.best||{})}, streak:{...f.streak, ...(s.streak||{})}, daily:{...(s.daily||{})}}; }
+// v4 adds Career (story) state and the review deck. Older saves migrate by filling the new fields; nothing is removed.
+const DECK_MAX = 40;
+const FRESH = () => ({ v:4, coins:0, stars:{}, best:{}, endlessBest:0, up:{shoes:0,manner:0,scanner:0,cart:0,coffee:0}, shifts:0,
+  nurse:null, nick:'', xp:0, streak:{count:0, last:'', freezes:1, week:''}, daily:{},
+  story:{seen:false, preceptor:null, shift:0, signoffs:{}}, deck:[] });
+const validCard = c => c && typeof c === 'object' && typeof c.k === 'string';
+function normalize(s){ const f = FRESH(); s = s||{}; const st = (s.story && typeof s.story === 'object') ? s.story : {};
+  return {...f, ...s, v:4, up:{...f.up, ...(s.up||{})}, stars:{...(s.stars||{})}, best:{...(s.best||{})}, streak:{...f.streak, ...(s.streak||{})}, daily:{...(s.daily||{})},
+    story:{...f.story, ...st, signoffs:{...(st.signoffs||{})}}, deck:(Array.isArray(s.deck) ? s.deck.filter(validCard) : []).slice(-DECK_MAX)}; }
 let SAVE = FRESH();
 try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if (s) SAVE = normalize(s); } catch(e){}
 function persist(){ SAVE.savedAt = Date.now(); try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch(e){} }
@@ -734,6 +747,24 @@ function importCode(code){
 }
 const starsOf = i => SAVE.stars[i] || 0;
 const unlocked = i => i === 0 || starsOf(i-1) >= 1;
+/* ---------- Rematch pile: situations that tripped the player up, saved so they can come back later as surprise rematches ---------- */
+const DECK_KEYS = {patient:'Wrong patient', time:'Already given', route:'NPO', vitals:'Out of range', prnTime:'PRN too soon', allergy:'Allergy',
+  hypo:'Low blood sugar', er:'Do not crush', pick:'Wrong pull', falseFlag:'Held a correct med', crushOk:'Crushable tablet'};
+const addDays = (key, n) => { const [y,m,d] = key.split('-').map(Number); return todayKey(new Date(y, m-1, d+n)); };
+function logMistake(c, key){
+  if (!G || !DECK_KEYS[key]) return;
+  (G.mistakes || (G.mistakes = [])).push({k:key, kind:(c && c.task && c.task.kind) || '', drug:String((c && c.task && c.task.correct) || '')});
+}
+function mergeDeck(list){
+  const today = todayKey();
+  for (const m of list || []){
+    const card = SAVE.deck.find(x => x.k === m.k && x.kind === m.kind);
+    if (card){ card.n = (card.n||1) + 1; card.box = 0; card.last = today; card.due = addDays(today, 1); if (m.drug) card.drug = m.drug; }
+    else SAVE.deck.push({k:m.k, kind:m.kind, drug:m.drug, n:1, box:0, first:today, last:today, due:addDays(today, 1)});
+  }
+  if (SAVE.deck.length > DECK_MAX) SAVE.deck.splice(0, SAVE.deck.length - DECK_MAX);
+}
+const deckDue = () => { const t = todayKey(); return SAVE.deck.filter(c => (c.due||'') <= t); };
 function unlockedKinds(){ const ks = new Set(['std']); LEVELS.forEach(L => { if (starsOf(L.idx) >= 1) L.kinds.forEach(k => ks.add(k)); }); return [...ks]; }
 function isoWeek(d = new Date()){ const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-day); const y0 = new Date(Date.UTC(t.getUTCFullYear(),0,1)); return t.getUTCFullYear()+'-W'+Math.ceil(((t-y0)/864e5+1)/7); }
 function refreshStreak(){
@@ -918,7 +949,7 @@ function renderStreak(pop){
    MENUS
    ========================================================= */
 function leaveShift(){
-  if (G){ clearInterval(G.tickId); G.active = false; G.ended = true; }
+  if (G){ clearInterval(G.tickId); G.active = false; G.ended = true; if (G.mistakes && G.mistakes.length){ mergeDeck(G.mistakes); G.mistakes = []; persist(); } }
   const ov = $('#pauseOv'); if (ov) ov.remove();
   G = null; R = Math.random; renderHud(); renderStreak(); toastsEl.innerHTML = ''; fxEl.innerHTML = '';
 }
@@ -943,7 +974,8 @@ function showTitle(){
   setSheet(`<div class="topline">${profileChip()}<span class="coins">🪙 ${SAVE.coins}</span></div>
     <div class="menu">
       <button class="btn big ${done?'ghost':'gold pulse'}" id="daily">📅 Daily Shift #${D.num} <small>${done ? '✓ '+'★'.repeat(done.stars||0)+' · '+done.score : 'NEW · same for everyone'}</small></button>
-      <button class="btn big ${done?'pulse':''}" id="career">▶ Career <small>Level ${nextLv.num}</small></button>
+      <button class="btn big ${done?'pulse':''}" id="career">🎮 Arcade <small>Level ${nextLv.num}</small></button>
+      <button class="btn green" id="story">🩺 Career <small>The New Hire · coming soon</small></button>
       <div class="row2"><button class="btn purple" id="endless">∞ Endless</button><button class="btn ghost" id="shop">🛒 Upgrades</button></div>
       <div class="row2"><button class="btn ghost" id="settings">⚙️ Settings</button>${installEvt ? '<button class="btn ghost" id="install">📲 Install</button>' : ''}</div>
     </div>`);
@@ -952,6 +984,7 @@ function showTitle(){
   $('#settings').onclick = () => { audio(); showSettings(); };
   if ($('#install')) $('#install').onclick = async () => { try { installEvt.prompt(); await installEvt.userChoice; } catch(e){} installEvt = null; showTitle(); };
   $('#career').onclick = () => { audio(); showCareer(); };
+  $('#story').onclick = () => { audio(); showStory(); };
   $('#endless').onclick = () => { audio(); showEndlessIntro(); };
   $('#shop').onclick = () => { audio(); showUpgrades(); };
 }
@@ -985,7 +1018,8 @@ function showSettings(){
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone;
   setSheet(`<div class="topline">${backBtn()}<span class="coins">🪙 ${SAVE.coins}</span></div>
     <div class="set-row"><b>👩‍⚕️ Profile</b><p>${esc(myName())} · ${rankOf(SAVE.xp||0).name} · ${SAVE.xp||0} XP · 🔥 ${SAVE.streak.count||0}-day streak · 🧊 ${SAVE.streak.freezes||0} streak freeze${(SAVE.streak.freezes||0)===1?'':'s'}</p><div class="actions" style="margin-top:6px"><button class="btn ghost" id="prof">Change nurse / nickname</button></div></div>
-    <div class="set-row"><b>💾 Your progress</b><p>Saved automatically on this device after every shift and purchase · ⭐ ${LEVELS.reduce((s,L)=>s+starsOf(L.idx),0)}/27 · ${SAVE.shifts||0} shifts played</p></div>
+    <div class="set-row"><b>💾 Your progress</b><p>Saved automatically on this device after every shift and purchase · ⭐ ${LEVELS.reduce((s,L)=>s+starsOf(L.idx),0)}/27 · ${SAVE.shifts||0} shifts played · 🔁 ${SAVE.deck.length} in the rematch pile</p></div>
+    <div class="set-row"><b>🩺 About Career</b><p>${FRAMING_FINE}</p></div>
     <div class="set-row"><b>📤 Backup code</b><p>Copy this to move your progress to another phone or browser.</p>
       <textarea class="field" id="code" rows="3" readonly>${exportCode()}</textarea>
       <div class="actions"><button class="btn" id="copy">Copy code</button></div></div>
@@ -994,7 +1028,7 @@ function showSettings(){
       <div class="actions"><button class="btn green" id="restore">Restore</button></div></div>
     ${ios ? `<div class="set-row"><b>📲 Install on iPhone</b><p>In Safari tap <b>Share</b> → <b>Add to Home Screen</b> to play full-screen, even offline.</p></div>` : ''}
     <div class="set-row"><b>🗑️ Reset progress</b><p>Erase all stars, coins, upgrades and your profile on this device.</p><div class="actions"><button class="btn hold" id="reset" style="flex:1">Reset everything</button></div></div>
-    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v3.0</div>`, 'scroll');
+    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v3.1</div>`, 'scroll');
   $('#back').onclick = showTitle;
   $('#prof').onclick = () => showProfile(false);
   $('#copy').onclick = async () => { const t = $('#code'); try { await navigator.clipboard.writeText(t.value); toast('📋 Backup code copied'); } catch(e){ t.select(); toast('Select the code and copy it'); } };
@@ -1003,7 +1037,7 @@ function showSettings(){
   $('#reset').onclick = e => { if (!armed){ armed = true; e.target.textContent = 'Tap again to erase'; return; } SAVE = FRESH(); persist(); toast('Progress reset'); showTitle(); };
 }
 function showCareer(){
-  phase(); leaveShift(); menuScene('Career', 'Pick a shift');
+  phase(); leaveShift(); menuScene('🎮 Arcade', 'Pick a level');
   const firstOpen = LEVELS.find(L => unlocked(L.idx) && !starsOf(L.idx));
   setSheet(`<div class="topline">${backBtn()}<span class="coins">🪙 ${SAVE.coins}</span></div>
     ${UNITS.map((u,ui) => `<div class="unit" style="animation-delay:${ui*.08}s"><div class="unit-h"><span class="ui">${u.icon}</span><div>${u.name}<small>${[...new Set(u.levels.flatMap(l=>l.kinds))].map(k=>KIND[k].icon+' '+KIND[k].label).join(' · ')}</small></div></div>
@@ -1011,6 +1045,35 @@ function showCareer(){
         return `<button class="lv ${ok?'':'locked'} ${firstOpen===L?'nextup':''}" data-i="${L.idx}"><b>${ok?L.num:'🔒'}</b><span class="s3">${[0,1,2].map(k=>`<span class="${k<s?'':'off'}">★</span>`).join('')}</span></button>`; }).join('')}</div></div>`).join('')}`, 'scroll');
   $('#back').onclick = showTitle;
   sheetEl.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i = +b.dataset.i; if (!unlocked(i)){ sfx.bad(); b.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}],{duration:250}); return; } showLevelIntro(LEVELS[i]); });
+}
+/* ---------- Career Mode (preview). Chapter 1 scripts are pending nurse review; shifts unlock in Phase 2. ---------- */
+const FRAMING = `Day one at a brand-new job. Six residents with big personalities, one preceptor who has seen it all, and a hallway that never stops ringing. Survive eight shifts and you fly solo.`;
+const FRAMING_FINE = `Just a game: a fictional care home with simplified meds — <strong>not a dosing reference</strong>. Real nursing takes school and a license, and the rules vary by state and facility.`;
+// Shift titles are the fun-facing names; the skill each one leans on is in the Chapter 1 scripts doc.
+const SIGNOFFS = [
+  {icon:'🪪', name:'Who Are You Again?'}, {icon:'⚠️', name:'Allergic to Surprises'}, {icon:'❤️', name:'Pressure’s Dropping'},
+  {icon:'🥄', name:'Don’t Crush It'}, {icon:'🗣️', name:'Dana Saw Something'}, {icon:'📞', name:'Everybody Wants You'},
+  {icon:'☎️', name:'Call the Doc'}, {icon:'✅', name:'Flying Solo'}];
+function showFraming(from){
+  phase(); leaveShift(); menuScene('🩺 You’re hired!', 'Career Mode');
+  setSheet(`<div class="frame-card"><p>${FRAMING}</p><p class="frame-fine">${FRAMING_FINE}</p></div>
+    <button class="btn big pulse" id="ok">Let’s go</button>`, 'scroll');
+  $('#ok').onclick = () => { audio(); sfx.good(); SAVE.story.seen = true; persist(); from === 'settings' ? showSettings() : showStory(); };
+}
+function showStory(){
+  phase(); leaveShift();
+  if (!SAVE.story.seen) return showFraming('story');
+  menuScene('🩺 Career', 'New Hire · Chapter 1');
+  const total = SAVE.deck.length;
+  setSheet(`<div class="topline">${backBtn()}<span class="coins">PREVIEW</span></div>
+    <div class="unit"><div class="unit-h"><span class="ui">🌸</span><div>Chapter 1 · The New Hire<small>Memory Care · 8 shifts · earn your preceptor’s trust, then fly solo</small></div></div>
+      <div class="signoffs">${SIGNOFFS.map((so,i) => `<div class="so" style="animation-delay:${i*.04}s"><b>${i+1}</b><span>${so.icon} ${so.name}</span><em>🔒 Soon</em></div>`).join('')}</div></div>
+    <div class="set-row"><b>🔁 Rematch pile · ${total}</b><p>${total ? 'Every situation that got you is waiting for a rematch. They come back to haunt you in Chapter 1.' : 'Anything that trips you up in any mode gets saved for a rematch.'}</p></div>
+    <div class="fine">Chapter 1 opens soon — Arcade’s open all night. <a href="#" id="about">About Career</a></div>
+    <div class="actions"><button class="btn big" id="arc">🎮 Play Arcade meanwhile</button></div>`, 'scroll');
+  $('#back').onclick = showTitle;
+  $('#about').onclick = e => { e.preventDefault(); showFraming('story'); };
+  $('#arc').onclick = () => { audio(); showCareer(); };
 }
 function newSkillCard(k){ return `<div class="newskill"><span>${KIND[k].icon}</span><div><b>NEW SKILL · ${KIND[k].name}</b><p>${KIND[k].tip}</p></div></div>`; }
 const HOWTO = `<div class="newskill"><span>🔔</span><div><b>HOW IT WORKS</b><p>Tap glowing rooms to plan your route. In each room: foam in, pull the right med, then read the bedside check — <b>Give</b> if it all matches, <b>Hold</b> and tap the wrong row if it doesn't.</p></div></div>`;
@@ -1039,7 +1102,7 @@ function showDailyIntro(){
 function showEndlessIntro(){
   phase(); leaveShift(); menuScene('∞ Endless Shift', 'How long can you last?');
   const ks = unlockedKinds(), hearts = 3 + (SAVE.up.coffee>=2?1:0);
-  setSheet(`<div class="msg">Calls keep coming and get faster. Every resident whose timer runs out costs a ❤. Lose all ${hearts} and the shift is over.<br><br><b>Skills in play:</b> ${ks.map(k=>KIND[k].icon+' '+KIND[k].label).join(' · ')}<br><small style="color:var(--muted)">Earn stars in Career to add more.</small></div>
+  setSheet(`<div class="msg">Calls keep coming and get faster. Every resident whose timer runs out costs a ❤. Lose all ${hearts} and the shift is over.<br><br><b>Skills in play:</b> ${ks.map(k=>KIND[k].icon+' '+KIND[k].label).join(' · ')}<br><small style="color:var(--muted)">Earn stars in Arcade to add more.</small></div>
     <div class="best-line" style="margin-bottom:12px">🏆 Best: ${SAVE.endlessBest}</div>
     <div class="actions"><button class="btn ghost" id="back" style="flex:0 0 30%">‹ Back</button><button class="btn big purple" id="go">∞ Start</button></div>`);
   $('#back').onclick = showTitle;
@@ -1372,7 +1435,7 @@ function bottleHTML(o){
 }
 function wrongPick(c, btn, msg, saying){
   btn.classList.add('nope'); btn.disabled = true; sfx.bad(); shake(); c.slip = true;
-  G.streak = 0; renderStreak(); G.stats.wrongPicks++; addScore(-75);
+  G.streak = 0; renderStreak(); G.stats.wrongPicks++; addScore(-75); logMistake(c, 'pick');
   const p = elCenter(btn); floatText(msg, 'bad', p.x, p.y-26); say(saying);
 }
 function stepPick(c, onDone){
@@ -1438,7 +1501,7 @@ function stepInsulin(c){
         flyCup(p, resTarget(), 550, true);
         after(700, () => stepRights(c));
       } else if (t.trap === 'hypo'){
-        finishUnsafe(c, `BG ${t.bg} is LOW. Giving insulin would drop it further — hold insulin and give juice instead.`);
+        logMistake(c, 'hypo'); finishUnsafe(c, `BG ${t.bg} is LOW. Giving insulin would drop it further — hold insulin and give juice instead.`);
       } else wrongPick(c, b, '−75 Wrong dose', 'Is that the right amount?');
     };
     cart.appendChild(b);
@@ -1452,10 +1515,10 @@ function stepPrep(c){
     <div class="actions"><button class="btn ghost" id="pharm" style="flex:0 0 44%">📞 Call pharmacy</button><button class="btn green" id="crush">🥄 Crush it</button></div>`);
   $('#pharm').onclick = () => {
     if (t.er) return finishHold(c, false, 'er');
-    c.slip = true; G.stats.slips++; G.streak = 0; renderStreak(); addScore(-50); sfx.bad();
+    c.slip = true; G.stats.slips++; G.streak = 0; renderStreak(); addScore(-50); sfx.bad(); logMistake(c, 'crushOk');
     toast(`📞 Pharmacy: "That one's fine to crush!" · −50`, 'bad'); mortar(c);
   };
-  $('#crush').onclick = () => { if (t.er) return finishUnsafe(c, `You crushed <b>${t.correct}</b> — an extended-release tablet. That dumps the whole day's dose at once. Should've called pharmacy.`); mortar(c); };
+  $('#crush').onclick = () => { if (t.er){ logMistake(c, 'er'); return finishUnsafe(c, `You crushed <b>${t.correct}</b> — an extended-release tablet. That dumps the whole day's dose at once. Should've called pharmacy.`); } mortar(c); };
 }
 function mortar(c){
   let hits = 0; const need = 6;
@@ -1512,7 +1575,7 @@ function stepRights(c){
       if (!flagging || !G.active || el.classList.contains('ok') || el.classList.contains('bad')) return;
       const p = elCenter(el);
       if (rt.bad){ el.classList.add('bad'); sfx.shield(); return after(350, () => finishHold(c, c.slip, c.task.trap)); }
-      el.classList.add('ok'); c.slip = true; G.stats.badHolds++; G.streak = 0; renderStreak(); addScore(-40); sfx.bad();
+      el.classList.add('ok'); c.slip = true; G.stats.badHolds++; G.streak = 0; renderStreak(); addScore(-40); sfx.bad(); logMistake(c, 'falseFlag');
       floatText('−40 That one matches', 'bad', p.x, p.y-16);
     };
     chips.appendChild(el); return el;
@@ -1575,7 +1638,7 @@ function finishHold(c, slipped, key){
 function finishUnsafe(c, why, key){
   phase();
   const b = $('#bigres'); if (b) b.classList.add('held');
-  G.streak = 0; renderStreak(); G.stats.unsafe++; addScore(-100); G.log.push('error');
+  G.streak = 0; renderStreak(); G.stats.unsafe++; addScore(-100); G.log.push('error'); if (key) logMistake(c, key);
   outcomeSheet(`<div class="sheet-h"><span>Med error</span><b class="badc">${key ? SHORT[key] : 'UNSAFE'}</b></div>
     <div class="msg">⚠️ ${why}${key ? `<br><small style="color:var(--muted)">It was in the bedside check — tap 🛑 Hold, then the row that doesn't match.</small>` : ''}</div><div class="tally"><div class="trow total neg"><span>Med error reported</span><b>−100</b></div></div>`);
   const p = sceneCenter(.55); sfx.bad(); shake(); banner('MED ERROR!', 'bad', .55); floatText('−100', 'bad', p.x, p.y+56, 1400); say('Oh dear…');
@@ -1624,6 +1687,7 @@ function endShift(completed){
     coins = Math.floor(G.score/10);
     title = 'SHIFT OVER'; sub = `∞ Endless · survived ${fmt(G.elapsed)}`;
   }
+  mergeDeck(G.mistakes); G.mistakes = [];
   SAVE.coins += coins; SAVE.shifts = (SAVE.shifts||0) + 1; persist(); renderHud();
 
   let verdict;

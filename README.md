@@ -3,6 +3,12 @@
 A mobile-first nursing med-pass time-management game.
 **Play:** https://medpass-madness.vercel.app (backup link: https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html)
 
+## What's new in v3.1 (Career Mode groundwork)
+- **Arcade and Career split.** The 9-level ladder is now called **Arcade** (same levels, stars and saves). **Career** previews Chapter 1, *The New Hire*: eight Memory Care shifts with a preceptor, a recurring cast and a solo finale. Coming soon.
+- **"You're hired!" card.** The first time you open Career, a short intro sets the scene plus a one-line note that it's a fictional care home with simplified meds. The same note is in Settings.
+- **Rematch pile.** Situations that trip you up in any mode (wrong pull, allergy, out-of-range vitals, crushing an ER tablet and so on) are saved so they can come back as surprise rematches in Chapter 1.
+- **Save v4.** Adds Career and rematch-pile fields; v3 saves and old backup codes migrate with nothing lost.
+
 ## What's new in v3
 - 18 residents and 12 playable nurses from the character sheets; pick your nurse + nickname on first launch
 - Room scene shows the resident you're treating and your nurse
@@ -16,7 +22,7 @@ A mobile-first nursing med-pass time-management game.
 - **In the room** – pull the right med from the cart, then tap each Right on the bedside check (MAR vs. bedside). **Administer** if everything matches, **🛑 Hold** if something doesn't.
 - **Hidden problems** – wrong wristband, already given, NPO, vitals below hold parameters, ER tablets that can't be crushed, low blood sugar, PRN given too recently. Catching one = +200.
 
-## Career (9 levels, 3 stars each)
+## Arcade (9 levels, 3 stars each)
 | Unit | New skill |
 |---|---|
 | 🌸 Memory Care (1–3) | Scheduled meds, 5 Rights, route planning |
@@ -29,6 +35,6 @@ A mobile-first nursing med-pass time-management game.
 👟 Comfy Shoes · 💬 Bedside Manner · 📟 Barcode Scanner · 🗂️ Organized Cart · ☕ Coffee
 
 ## ∞ Endless
-Calls keep coming faster; 3 hearts. Skills unlock as you earn Career stars.
+Calls keep coming faster; 3 hearts. Skills unlock as you earn Arcade stars.
 
 Single `index.html` + `/assets`. No build step, no ads, no music. Progress saves in the browser.
