@@ -71,7 +71,7 @@ button{font-family:inherit;color:inherit}
 #pauseOv .btn{max-width:300px}
 .field{width:100%;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;background:#0b1222;color:#cbd5e1;border:1px solid var(--line);border-radius:10px;padding:8px;resize:none;margin:6px 0 8px;user-select:text;-webkit-user-select:text}
 .set-row{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
-.set-row b{display:block;margin-bottom:2px}
+.set-row>b{display:block;margin-bottom:2px}
 .set-row p{font-size:.78rem;color:var(--muted);line-height:1.3}
 .set-row .actions .btn{padding:10px;font-size:.92rem}
 .fine{font-size:.7rem;color:var(--muted);text-align:center;line-height:1.4;margin-top:4px}
@@ -95,7 +95,8 @@ button{font-family:inherit;color:inherit}
 .sheet{flex:0 0 auto;position:relative;z-index:5;background:var(--panel);border-radius:22px 22px 0 0;margin-top:-20px;padding:14px 14px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.45)}
 .sheet:empty{display:none}
 .sheet.in{animation:sheetIn .38s cubic-bezier(.2,.9,.3,1.15)}
-.sheet.scroll{max-height:66dvh;max-height:66vh;overflow-y:auto}
+.sheet.scroll{max-height:66dvh;max-height:66vh;overflow-y:auto;overflow-x:hidden}
+.sheet.locked{overflow:hidden!important}
 #fx{position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden}
 #toasts{position:absolute;left:0;right:0;bottom:120px;display:flex;flex-direction:column-reverse;align-items:center;gap:6px;z-index:26;pointer-events:none}
 .toast{background:rgba(8,14,30,.9);border:1px solid rgba(255,255,255,.18);padding:6px 13px;border-radius:99px;font-size:.84rem;font-weight:600;animation:toast 2.6s forwards;box-shadow:0 6px 16px rgba(0,0,0,.4)}
@@ -125,7 +126,13 @@ button{font-family:inherit;color:inherit}
 
 /* ---------- Menus ---------- */
 .kb>img{animation:kenburns 16s ease-in-out infinite alternate;transform-origin:62% 35%}
-.shade{background:linear-gradient(180deg,rgba(7,11,22,.1) 30%,rgba(7,11,22,.85))}
+.shade{background:linear-gradient(180deg,rgba(7,11,22,.55),rgba(7,11,22,.7) 45%,rgba(7,11,22,.94))}
+.shade.lite{background:rgba(7,11,22,.35)}
+.map.deco{pointer-events:none;animation:mapDrift 22s ease-in-out infinite alternate;filter:blur(1.5px) saturate(.85)}
+.map.deco.sharp{filter:none}
+.map.deco .room{cursor:default}
+.deco-nurse{transform:translate(-50%,-50%);left:50%;top:79%}
+@keyframes mapDrift{from{transform:scale(1.02)}to{transform:scale(1.08) translateY(-1.5%)}}
 .title{position:absolute;left:0;right:0;bottom:34px;text-align:center;padding:0 16px}
 .logo{font-size:2.9rem;font-weight:700;line-height:.92;text-shadow:0 4px 0 #0369a1,0 10px 30px rgba(0,0,0,.6);animation:logoIn .8s cubic-bezier(.2,1.4,.4,1) both}
 .logo em{font-style:normal;color:var(--gold);text-shadow:0 4px 0 #b45309,0 10px 30px rgba(0,0,0,.6);display:inline-block;animation:wiggle 2.4s ease-in-out 1s infinite}
@@ -144,6 +151,7 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 .so.nextup{border-color:var(--gold);animation:chipIn .3s both,urge 1.4s infinite 1s}
 .so .s3{font-size:.8rem;color:var(--gold)} .so .s3 .off{color:#3b4766}
 .pchip.pre{display:flex;align-items:center;gap:10px;width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:8px 10px;margin-bottom:12px;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pchip.pre b{max-width:none;white-space:normal}
 .pchip.pre img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top}
 .pchip.pre small{display:block;color:var(--muted);font-size:.72rem}
 .beat{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px;animation:chipIn .35s both}
@@ -163,7 +171,7 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 .dana-a{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 .dana-a button{background:#24304f;color:#fff;border:0;border-radius:10px;padding:9px 4px;font:inherit;font-size:.78rem;font-weight:700;box-shadow:0 3px 0 #141c33;cursor:pointer}
 .dana-a button:first-child{background:var(--green);box-shadow:0 3px 0 #15803d}
-.intr{position:absolute;inset:0;z-index:40;background:var(--panel);border-radius:22px 22px 0 0;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px;animation:popIn .3s both}
+.intr{position:absolute;inset:0;z-index:40;background:var(--panel);border-radius:22px 22px 0 0;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px;animation:chipIn .25s both}
 .intr-h{font-weight:800;color:#f59e0b;letter-spacing:.04em}
 .intr p{font-size:1rem;line-height:1.35}
 .intr-a{display:grid;gap:8px}
@@ -201,7 +209,7 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 .targets .s{color:var(--gold)}
 .newskill{display:flex;gap:10px;align-items:center;background:linear-gradient(90deg,#3b0764,#1e1b4b);border:1px solid #7c3aed;border-radius:14px;padding:10px 12px;margin-bottom:12px;animation:chipIn .35s both}
 .newskill>span{font-size:1.9rem}
-.newskill b{display:block;font-size:.95rem}
+.newskill div>b{display:block;font-size:.95rem}
 .newskill p{font-size:.8rem;color:#ddd6fe;line-height:1.3}
 .upg{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:9px 10px;margin-bottom:8px;animation:chipIn .3s both}
 .upg .ic{font-size:1.6rem;width:32px;text-align:center}
@@ -257,8 +265,8 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 .wall::before{content:'';position:absolute;left:0;right:0;top:57%;height:12px;background:linear-gradient(#5b9bd5,#3b78b3);border-radius:6px;box-shadow:0 3px 4px rgba(0,0,0,.15)}
 .frame{position:absolute;left:16%;right:16%;top:8%;bottom:18%;border:12px solid #7c5530;border-bottom:none;border-radius:8px 8px 0 0;overflow:hidden;perspective:1100px;background:#1a1410;box-shadow:0 0 0 3px rgba(0,0,0,.12),0 18px 40px rgba(0,0,0,.25)}
 .room-in{position:absolute;inset:0}
-.room-in img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);transition:transform 1.2s ease-out}
-.door-wrap.open .room-in img{transform:scale(1)}
+.room-in img,.room-in svg{width:100%;height:100%;object-fit:cover;transform:scale(1.12);transition:transform 1.2s ease-out;display:block}
+.door-wrap.open .room-in img,.door-wrap.open .room-in svg{transform:scale(1)}
 .leaf{position:absolute;inset:0;transform-origin:left center;transition:transform .7s cubic-bezier(.45,0,.2,1);background:linear-gradient(90deg,#a86d3a,#c88c52 45%,#b27741 80%,#9a6334);box-shadow:inset -8px 0 14px rgba(0,0,0,.18),inset 6px 0 10px rgba(255,255,255,.08);backface-visibility:hidden}
 .door-wrap.open .leaf{transform:rotateY(-100deg)}
 .leaf.knocked{animation:knock .4s}
@@ -428,7 +436,7 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 @keyframes coach{from{transform:translate(-50%,-100%)}to{transform:translate(-50%,calc(-100% - 6px))}}
 @keyframes grind{50%{transform:rotate(-12deg) scale(.94)}}
 @media (prefers-reduced-motion:reduce){
-  #app.shake,.kb>img,.room.call,.room.urgent .ring{animation:none!important}
+  #app.shake,.kb>img,.map.deco,.room.call,.room.urgent .ring{animation:none!important}
 }
 
 /* ---------- v3: characters, profile, daily ---------- */
@@ -436,7 +444,7 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 .room.call .rm-mood{transform:scale(1)}
 .rm-name{font-size:.7rem}
 .nurse .face{background-size:cover!important;background-position:center 20%!important}
-.room-bg>img{filter:blur(6px) brightness(.55) saturate(1.1);transform:scale(1.12)}
+.room-bg>img,.room-bg>svg{width:100%;height:100%;display:block;filter:blur(3px) brightness(.62) saturate(1.1);transform:scale(1.08)}
 .room-shade{background:linear-gradient(180deg,rgba(7,11,22,.15),rgba(7,11,22,.55))}
 .bigres{position:absolute;right:6%;top:84px;bottom:16px;aspect-ratio:1/1;max-width:56%;border-radius:24px;overflow:hidden;border:4px solid #fff;box-shadow:0 14px 34px rgba(0,0,0,.5);background:#fff;animation:popIn .45s .1s both;z-index:1}
 .bigres img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .4s}
@@ -485,6 +493,7 @@ button.so{width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;b
 .nick{display:block;width:100%;margin-top:5px;font-family:inherit;font-size:1rem;font-weight:600;color:var(--text);background:#0b1222;border:2px solid var(--line);border-radius:12px;padding:10px 12px;text-transform:none;letter-spacing:0;user-select:text;-webkit-user-select:text}
 .nick:focus{outline:none;border-color:var(--sky)}
 .end-avatar{position:absolute;left:50%;top:14px;transform:translateX(-50%);width:64px;height:64px;border-radius:18px;overflow:hidden;border:3px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.4);z-index:2;animation:dropIn .4s both}
+@container (max-height: 300px){ .end-avatar{display:none} }
 .end-avatar img{width:100%;height:100%;object-fit:cover;object-position:center 20%}
 .rankup{text-align:center;background:linear-gradient(90deg,#7c3aed,#2563eb);border-radius:12px;padding:6px;margin-bottom:8px;font-weight:600;animation:popIn .4s 1s both}
 .xprow{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--muted);margin-bottom:10px}
@@ -733,9 +742,9 @@ const UNITS = [
     {n:8,  time:145, maxActive:3, patience:42, spawnEvery:7.5, kinds:['std','vitals','crush'], trapRate:.15, focus:'crush', rush:[.4,.75]},
     {n:10, time:170, maxActive:4, patience:40, spawnEvery:7,   kinds:['std','vitals','crush'], trapRate:.18, rush:[.3,.6,.85]}]},
   {name:'Med-Surg', icon:'🏥', levels:[
-    {n:8,  time:155, maxActive:3, patience:44, spawnEvery:8,   kinds:['std','vitals','insulin'], trapRate:.15, focus:'insulin', rush:[.5]},
-    {n:10, time:180, maxActive:4, patience:42, spawnEvery:7,   kinds:['std','vitals','insulin','prn'], trapRate:.15, focus:'prn', rush:[.35,.7]},
-    {n:12, time:210, maxActive:4, patience:40, spawnEvery:6.5, kinds:['std','vitals','crush','insulin','prn'], trapRate:.18, rush:[.25,.5,.75]}]}
+    {n:8,  time:135, maxActive:3, patience:44, spawnEvery:8,   kinds:['std','vitals','insulin'], trapRate:.15, focus:'insulin', rush:[.5]},
+    {n:10, time:155, maxActive:4, patience:42, spawnEvery:7,   kinds:['std','vitals','insulin','prn'], trapRate:.15, focus:'prn', rush:[.35,.7]},
+    {n:12, time:180, maxActive:4, patience:40, spawnEvery:6.5, kinds:['std','vitals','crush','insulin','prn'], trapRate:.18, rush:[.25,.5,.75]}]}
 ];
 const LEVELS = UNITS.flatMap((u,ui) => u.levels.map((l,li) => ({...l, unit:u, ui, li, idx:ui*3+li, num:ui*3+li+1})));
 LEVELS.forEach(L => { L.t2 = L.n*210; L.t3 = L.n*270; });
@@ -748,7 +757,7 @@ const UPGRADES = [
   {id:'coffee',  icon:'☕', name:'Coffee',          desc:'+15s per shift per level · max level: +1 ❤ in Endless', costs:[100,240]}
 ];
 // Experience titles only — playing never implies earning a license or a job role.
-const RANKS = [ {xp:0, name:'Rookie'}, {xp:300, name:'Floor Pro'}, {xp:900, name:'Steady Hands'}, {xp:2000, name:'Preceptor Pick'}, {xp:4000, name:'Unit Legend'}, {xp:8000, name:'Hall of Fame'} ];
+const RANKS = [ {xp:0, name:'Rookie'}, {xp:300, name:'Floor Pro'}, {xp:900, name:'Steady Hands'}, {xp:2000, name:'Hallway Hero'}, {xp:4000, name:'Unit Legend'}, {xp:8000, name:'Hall of Fame'} ];
 const rankOf = xp => { let r = RANKS[0], k = 0; RANKS.forEach((x,i) => { if (xp >= x.xp){ r = x; k = i; } }); return {...r, k, next: RANKS[k+1]}; };
 
 /* ---------- Daily Shift ---------- */
@@ -759,7 +768,7 @@ function dailyConfig(key = todayKey()){
   const seed = Number(key.replace(/-/g,''));
   const r = mulberry32(seed), all = ['vitals','crush','insulin','prn'];
   const a = all[Math.floor(r()*4)], b = all.filter(k=>k!==a)[Math.floor(r()*3)];
-  return { n:9, time:165, maxActive:3, patience:42, spawnEvery:7.5, kinds:['std',a,b], trapRate:.17, rush:[.3,.65], seed, key, num:dayNum(key), t2:9*210, t3:9*270 };
+  return { n:9, time:150, maxActive:3, patience:42, spawnEvery:7.5, kinds:['std',a,b], trapRate:.17, rush:[.3,.65], seed, key, num:dayNum(key), t2:9*210, t3:9*270 };
 }
 
 /* ---------- Save ---------- */
@@ -912,7 +921,7 @@ function splitLabel(l){ const m = l.match(/^(.*?)\s+([\d.]+\s?(?:mg|mcg|mEq|unit
 function capColor(l){ const pal=['#ef4444','#f59e0b','#22c55e','#3b82f6','#a855f7','#ec4899','#14b8a6','#eab308']; let h=0; for (const ch of l) h=(h*31+ch.charCodeAt(0))>>>0; return pal[h%pal.length]; }
 const isER = l => /\b(ER|XL)\b/.test(l);
 function optFrom(label){ const [name, dose] = splitLabel(label); return {key:label, name, dose, er:isER(name)}; }
-function setSheet(html, cls=''){ sheetEl.className = 'sheet '+cls; sheetEl.innerHTML = html; void sheetEl.offsetWidth; sheetEl.classList.add('in'); placeToasts(); }
+function setSheet(html, cls=''){ sheetEl.className = 'sheet '+cls; sheetEl.innerHTML = html; sheetEl.scrollTop = 0; void sheetEl.offsetWidth; sheetEl.classList.add('in'); placeToasts(); }
 function placeToasts(){}
 const stageRect = () => stage.getBoundingClientRect();
 function sceneCenter(fy=.45){ const r = sceneEl.getBoundingClientRect(), s = stageRect(); return { x:r.left-s.left+r.width/2, y:r.top-s.top+r.height*fy }; }
@@ -993,9 +1002,36 @@ function leaveShift(){
   const ov = $('#pauseOv'); if (ov) ov.remove();
   G = null; R = Math.random; renderHud(); renderStreak(); toastsEl.innerHTML = ''; fxEl.innerHTML = '';
 }
+// One look everywhere: menus show your actual floor (same map as gameplay) with your own nurse at the station.
+const MENU_FLOOR = [13, 0, 14, 11, 10, 3, 6, 8];
+function floorMap(floor, calls = [1, 4, 6]){
+  floor = floor || MENU_FLOOR.map(i => ROSTER[i]);
+  return `<div class="map deco" aria-hidden="true"><div class="corridor"></div><div class="station">🩺 RN STATION</div>
+    ${ROOMS.map((r,i) => { const on = calls.includes(i), f = [.85,.5,.25][calls.indexOf(i) % 3];
+      return `<div class="room ${r.side} ${on?'call':''}" style="top:${r.y*100}%;${on?`--p:${f};--rc:${f>.6?'#22c55e':f>.3?'#f59e0b':'#ef4444'}`:''}"><span class="rm-top"><span class="bulb"></span>${r.num}</span><span class="ring"><img src="${floor[i].portrait}" alt=""></span><span class="rm-name">${esc(floor[i].call)}</span></div>`; }).join('')}
+    <div class="nurse deco-nurse"><span class="minicart"></span><span class="face" style="background-image:url(${nurseImg(SAVE.nurse||0)})"></span></div></div>`;
+}
+const ROOM_SVG = `<svg class="room-art" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs><linearGradient id="rw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7e9cf"/><stop offset="1" stop-color="#ebd6b3"/></linearGradient>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fcdf3"/><stop offset="1" stop-color="#dff2ff"/></linearGradient>
+<linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#caa77a"/><stop offset="1" stop-color="#a67f53"/></linearGradient></defs>
+<rect width="300" height="400" fill="url(#rw)"/><rect y="226" width="300" height="70" fill="#d6e9dd"/><rect y="221" width="300" height="8" rx="2" fill="#93bfa6"/>
+<rect y="294" width="300" height="106" fill="url(#fl)"/><rect y="290" width="300" height="6" fill="#86663f"/>
+<rect x="28" y="52" width="104" height="122" rx="6" fill="#fff"/><rect x="36" y="60" width="88" height="106" fill="url(#sky)"/>
+<circle cx="104" cy="84" r="11" fill="#fff4b8"/><path d="M36 146q22-20 44-7q24-15 44 0v27H36z" fill="#86c97f"/><path d="M36 156q30-12 88-4v14H36z" fill="#6fb46a"/>
+<rect x="78" y="60" width="4" height="106" fill="#fff"/><rect x="36" y="111" width="88" height="4" fill="#fff"/>
+<path d="M18 44h28q-8 72 4 140H18z" fill="#6fb0c4"/><path d="M142 44h-28q8 72-4 140h32z" fill="#6fb0c4"/><rect x="12" y="39" width="136" height="7" rx="3" fill="#a77d4e"/>
+<rect x="194" y="68" width="76" height="60" rx="3" fill="#a77d4e"/><rect x="200" y="74" width="64" height="48" fill="#fdf3e3"/>
+<path d="M216 116v-20M232 116v-28M248 116v-18" stroke="#5e9e58" stroke-width="2.5"/><circle cx="216" cy="94" r="7" fill="#f472b6"/><circle cx="232" cy="86" r="8" fill="#fb7185"/><circle cx="248" cy="96" r="7" fill="#f9a8d4"/>
+<rect x="16" y="234" width="72" height="68" rx="5" fill="#b4834f"/><rect x="22" y="246" width="60" height="22" rx="3" fill="#c79762"/><rect x="22" y="274" width="60" height="22" rx="3" fill="#c79762"/><circle cx="52" cy="257" r="2.5" fill="#86663f"/><circle cx="52" cy="285" r="2.5" fill="#86663f"/>
+<rect x="44" y="214" width="16" height="20" rx="3" fill="#5f9ea0"/><path d="M34 214h36l-8-24H42z" fill="#7dd3c0"/>
+<rect x="118" y="182" width="176" height="20" rx="10" fill="#946539"/><rect x="124" y="196" width="12" height="118" fill="#946539"/>
+<rect x="150" y="214" width="92" height="30" rx="14" fill="#fff"/><path d="M128 244h172v82H128z" fill="#f1d6a6"/><path d="M128 244h172v14H128z" fill="#fff6e6"/>
+<g fill="#e8c28a"><circle cx="160" cy="282" r="6"/><circle cx="200" cy="300" r="6"/><circle cx="240" cy="278" r="6"/><circle cx="280" cy="304" r="6"/><circle cx="180" cy="316" r="5"/></g>
+<ellipse cx="150" cy="364" rx="120" ry="22" fill="#d7b98f" opacity=".55"/></svg>`;
 function menuScene(title, sub){
   sceneEl.className = 'scene';
-  sceneEl.innerHTML = `<div class="layer kb"><img src="${IMG.hall}" alt=""></div><div class="layer shade"></div>${title ? `<div class="scene-title">${title}${sub?`<small>${sub}</small>`:''}</div>` : ''}`;
+  sceneEl.innerHTML = `${floorMap()}<div class="layer shade"></div>${title ? `<div class="scene-title">${title}${sub?`<small>${sub}</small>`:''}</div>` : ''}`;
 }
 const backBtn = (id='back') => `<button class="btn ghost" id="${id}" style="width:auto;padding:8px 14px;font-size:.9rem">‹ Back</button>`;
 function profileChip(){
@@ -1007,13 +1043,13 @@ function showTitle(){
   if (SAVE.nurse == null) return showProfile(true);
   refreshStreak();
   sceneEl.className = 'scene';
-  sceneEl.innerHTML = `<div class="layer kb"><img src="${IMG.hall}" alt="Nurse pushing a med cart down the hallway"></div><div class="layer shade"></div>
+  sceneEl.innerHTML = `${floorMap()}<div class="layer shade"></div>
     <div class="title"><div class="logo">💊 MedPass<br><em>Madness</em></div><div class="tagline">Juggle the call lights. Pass meds safely. Catch the mistakes.</div></div>`;
   const nextLv = LEVELS.find(L => unlocked(L.idx) && !starsOf(L.idx)) || LEVELS[LEVELS.length-1];
   const D = dailyConfig(), done = SAVE.daily[D.key];
   setSheet(`<div class="topline">${profileChip()}<span class="coins">🪙 ${SAVE.coins}</span></div>
     <div class="menu">
-      <button class="btn big ${done?'ghost':'gold pulse'}" id="daily">📅 Daily Shift #${D.num} <small>${done ? '✓ '+'★'.repeat(done.stars||0)+' · '+done.score : 'NEW · same for everyone'}</small></button>
+      <button class="btn big ${done?'ghost':'gold pulse'}" id="daily">📅 Daily Shift #${D.num} <small>${done ? '✓ '+'★'.repeat(done.stars||0)+' · '+done.score : 'NEW · same for all'}</small></button>
       <button class="btn big ${done?'pulse':''}" id="career">🎮 Arcade <small>Level ${nextLv.num}</small></button>
       <button class="btn green ${SAVE.story.seen ? '' : 'pulse'}" id="story">🩺 Career <small>${SAVE.story.done ? 'Chapter 1 cleared ✓' : `The New Hire · Shift ${Math.max(1, STORY.findIndex((_, i) => storyUnlocked(i) && !(SAVE.story.stars[i] > 0)) + 1 || 8)}`}</small></button>
       <div class="row2"><button class="btn purple" id="endless">∞ Endless</button><button class="btn ghost" id="shop">🛒 Upgrades</button></div>
@@ -1068,7 +1104,7 @@ function showSettings(){
       <div class="actions"><button class="btn green" id="restore">Restore</button></div></div>
     ${ios ? `<div class="set-row"><b>📲 Install on iPhone</b><p>In Safari tap <b>Share</b> → <b>Add to Home Screen</b> to play full-screen, even offline.</p></div>` : ''}
     <div class="set-row"><b>🗑️ Reset progress</b><p>Erase all stars, coins, upgrades and your profile on this device.</p><div class="actions"><button class="btn hold" id="reset" style="flex:1">Reset everything</button></div></div>
-    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v3.2</div>`, 'scroll');
+    <div class="fine">MedPass Madness is a game for fun and learning — not clinical guidance. Always follow your facility's policies.<br><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · v3.3</div>`, 'scroll');
   $('#back').onclick = showTitle;
   $('#prof').onclick = () => showProfile(false);
   $('#copy').onclick = async () => { const t = $('#code'); try { await navigator.clipboard.writeText(t.value); toast('📋 Backup code copied'); } catch(e){ t.select(); toast('Select the code and copy it'); } };
@@ -1159,7 +1195,7 @@ function startShift(mode, L){
         t2: cfg.t2 || 0, t3: cfg.t3 || 1, floor,
         hearts: 3 + (up.coffee>=2?1:0), maxHearts: 3 + (up.coffee>=2?1:0),
         calls:[], queue:[], visit:null, cid:0, spawned:0, resolved:0, served:0, spawnTimer:3, cool: ROOMS.map(()=>0),
-        nurse:{x:.5, y:.86, path:null, pathFor:null}, view:'count', tapped:false, lastSec:-1, log:[],
+        nurse:{x:.5, y:.79, path:null, pathFor:null}, view:'count', tapped:false, lastSec:-1, log:[],
         score:0, shown:0, streak:0, bestStreak:0, active:false, ended:false, tickId:null,
         stats:{passes:0, catches:0, wrongPicks:0, slips:0, badHolds:0, unsafe:0, missed:0},
         pool: cfg.pool || null, clock:0, events:(cfg.events||[]).map(e => ({...e})), intq:(cfg.ints||[]).slice(), intRematch:new Set(),
@@ -1176,7 +1212,7 @@ function startShift(mode, L){
   }
   if (mode === 'career' || mode === 'story') injectRematches(G.plan);   // never the Daily: it must stay identical for everyone
   scoreEl.textContent = '0'; renderHud(); renderStreak();
-  menuScene(''); sceneEl.querySelector('.kb').classList.remove('kb'); sheetEl.innerHTML = ''; sheetEl.className = 'sheet';
+  sceneEl.className = 'scene'; sceneEl.innerHTML = `${floorMap(floor, []).replace('map deco', 'map deco sharp')}<div class="layer shade lite"></div>`; sheetEl.innerHTML = ''; sheetEl.className = 'sheet';
   let n = 3;
   const tick = () => {
     if (n > 0){ banner(n, 'count', .5); sfx.count(); n--; after(650, tick); }
@@ -1389,7 +1425,8 @@ function hubLoop(){
     const W = MAP.W, H = MAP.H;
     const targetId = G.queue[0], target = targetId != null ? G.calls.find(c => c.id === targetId) : null;
     let walking = false;
-    if (target && G.active){
+    const danaStop = G.dana && MAP.el.querySelector('#dana');   // Dana stops you in the hall until you answer her
+    if (target && G.active && !danaStop){
       const room = ROOMS[target.room];
       if (N.pathFor !== targetId || !N.path) { N.path = buildPath(N, room); N.pathFor = targetId; }
       let step = H * .62 * (1 + .2*SAVE.up.shoes) * dt;
@@ -1423,7 +1460,7 @@ function enterVisit(c){
   const r = ROOMS[c.room];
   sceneEl.className = 'scene';
   sceneEl.innerHTML = `<div class="door-wrap approach" id="dw"><div class="wall"></div><div class="dispenser" id="disp"><i></i></div>
-      <div class="frame"><div class="room-in"><img src="${IMG.door}" alt=""></div>
+      <div class="frame"><div class="room-in">${ROOM_SVG}</div>
         <div class="leaf" id="leaf"><div class="pnl a"></div><div class="pnl b"></div><div class="plaque"><b>${r.num}</b><span>${esc(c.res.call)}</span></div><div class="knob"></div></div></div>
       <div class="bubble" id="kk">✊ knock knock</div></div>`;
   setSheet(`<button class="btn big green foam" id="foam">🧴 Foam in</button><div class="fine" style="margin-top:6px">Clean hands before every room.</div>`);
@@ -1446,7 +1483,7 @@ function enterVisit(c){
 function roomScene(c){
   phase(); const r = c.res, t = c.task;
   sceneEl.className = 'scene'; void sceneEl.offsetWidth; sceneEl.classList.add('fade-in');
-  sceneEl.innerHTML = `<div class="layer room-bg"><img src="${IMG.give}" alt=""></div><div class="layer room-shade"></div>
+  sceneEl.innerHTML = `<div class="layer room-bg">${ROOM_SVG}</div><div class="layer room-shade"></div>
     <div class="bigres" id="bigres"><img src="${r.portrait}" alt="${esc(r.name)}"></div>
     <div class="meav"><img src="${nurseImg(SAVE.nurse||0)}" alt=""><span>${esc(myName())}</span></div>
     <div class="pt-banner"><div class="pt-id"><b>${esc(r.name)}${r.nick ? ` <i>“${esc(r.nick)}”</i>` : ''}</b><span>Rm ${ROOMS[c.room].num} · ${r.age} yrs · DOB ${r.dob}</span></div>
@@ -1758,7 +1795,7 @@ function endShift(completed){
   }
 
   sceneEl.className = 'scene';
-  sceneEl.innerHTML = `<div class="layer kb"><img src="${stars||G.mode==='endless' ? IMG.give : IMG.hall}" alt=""></div><div class="layer end-shade"></div>
+  sceneEl.innerHTML = `${floorMap(G.floor, [])}<div class="layer end-shade"></div>
     <div class="end-avatar"><img src="${nurseImg(SAVE.nurse||0)}" alt=""></div>
     <div class="end-title"><div class="et">${title}<small>${sub}</small></div>
     ${G.mode!=='endless' ? `<div class="stars">${[0,1,2].map(k=>`<span class="${k<stars?'on':''}" style="animation-delay:${.35+k*.25}s">★</span>`).join('')}</div>` : ''}
@@ -1785,7 +1822,7 @@ function endShift(completed){
   if (signed) after(700, () => { banner('✅ SIGNED OFF', 'goldb', .3); confetti(chapterDone ? 90 : 40); });
   for (let k=0;k<stars;k++) after(350+k*250, () => sfx.star(k));
   if (rankLine) after(1100, sfx.rankup);
-  if (stars >= 2 || isBest) after(500, () => confetti(50));
+  if (stars >= 2 || (isBest && (stars || G.mode === 'endless'))) after(500, () => confetti(50));
   const fin = $('#final'), t0 = performance.now(), to = G.score;
   const f = now => { if (!fin.isConnected) return; const k = Math.min(1,(now-t0)/1200); fin.textContent = Math.round(to*(1-Math.pow(1-k,3))); if (k<1) requestAnimationFrame(f); };
   requestAnimationFrame(f);
@@ -1912,28 +1949,28 @@ const SBAR = {
 const SBAR_HINT = {S:`Wait — what's going on? Start with the situation.`, B:`Okay… and who is this resident?`, A:`What did you actually find?`, R:`So what do you need from me?`};
 
 const STORY = [
-  {name:'Who Are You Again?', icon:'🪪', n:7, time:165, maxActive:2, patience:54, spawnEvery:8.5, kinds:['std'], trapRate:.22, pool:['patient','time','route'], rush:[],
+  {name:'Who Are You Again?', icon:'🪪', n:7, time:140, maxActive:2, patience:54, spawnEvery:8.5, kinds:['std'], trapRate:.22, pool:['patient','time','route'], rush:[],
    moments:['1a','1b','1c'], beat:{who:'pre', line:`Six residents, one hallway, one routine. They'll learn your face before you learn their meds.`},
    tip:`Mae will tell you she's someone else. She's very convincing.`},
-  {name:'Allergic to Surprises', icon:'⚠️', n:8, time:175, maxActive:3, patience:50, spawnEvery:8, kinds:['std'], trapRate:.35, pool:['allergy','allergy','patient','time'], rush:[.5],
+  {name:'Allergic to Surprises', icon:'⚠️', n:8, time:145, maxActive:3, patience:50, spawnEvery:8, kinds:['std'], trapRate:.35, pool:['allergy','allergy','patient','time'], rush:[.5],
    moments:['2a','2b','2c'], beat:{who:'mae', line:`Now who are you again, sugar? …Oh! The one with the nice cart.`},
    tip:`Everybody here is allergic to something. Read the band, then read the bottle.`},
-  {name:'Pressure’s Dropping', icon:'❤️', n:8, time:180, maxActive:3, patience:48, spawnEvery:7.5, kinds:['std','vitals'], focus:'vitals', trapRate:.18, pool:['patient','time','route','allergy'], rush:[.5],
+  {name:'Pressure’s Dropping', icon:'❤️', n:8, time:150, maxActive:3, patience:48, spawnEvery:7.5, kinds:['std','vitals'], focus:'vitals', trapRate:.18, pool:['patient','time','route','allergy'], rush:[.5],
    moments:['3a','3b','3c'], beat:{who:'jose', line:`Pill time? I didn't forget — I postponed! Now… salsa lesson?`},
    tip:`Heart and BP meds come with hold numbers. The order decides, not the vibes.`},
-  {name:'Don’t Crush It', icon:'🥄', n:8, time:180, maxActive:3, patience:48, spawnEvery:7.5, kinds:['std','crush'], focus:'crush', trapRate:.18, pool:['patient','time','allergy'], rush:[.5],
+  {name:'Don’t Crush It', icon:'🥄', n:8, time:150, maxActive:3, patience:48, spawnEvery:7.5, kinds:['std','crush'], focus:'crush', trapRate:.18, pool:['patient','time','allergy'], rush:[.5],
    moments:['4a','4b','4c'], beat:{who:'henry', line:`A cherry tomato from the courtyard. For checking my pressure so carefully.`},
    tip:`Applesauce: great. Crushed extended-release: a whole day of medicine at once.`},
-  {name:'Dana Saw Something', icon:'🗣️', n:7, time:200, maxActive:3, patience:48, spawnEvery:8, kinds:['std','vitals'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.6],
+  {name:'Dana Saw Something', icon:'🗣️', n:7, time:165, maxActive:3, patience:48, spawnEvery:8, kinds:['std','vitals'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.6],
    events:[{at:.12,id:'R1'},{at:.4,id:'R4'},{at:.62,id:'R3'}], beat:{who:'lena', line:`Dana watches everyone. Listen to her — she sees things.`},
    tip:`Dana tells you what she saw. Deciding what it means? That's on you.`},
-  {name:'Everybody Wants You', icon:'📞', n:8, time:200, maxActive:3, patience:46, spawnEvery:7, kinds:['std','vitals','crush'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.35,.7],
+  {name:'Everybody Wants You', icon:'📞', n:8, time:170, maxActive:3, patience:46, spawnEvery:7, kinds:['std','vitals','crush'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.35,.7],
    ints:['I1','I2','I3'], events:[{at:.45,id:'R7'}], beat:{who:'evelyn', line:`I won bingo TWICE. Can I have my two o'clock pills early so I don't miss round three?`},
    tip:`Phones, visitors, coworkers. Finish or lock down what's in your hands first.`},
-  {name:'Call the Doc', icon:'☎️', n:8, time:220, maxActive:3, patience:46, spawnEvery:7, kinds:['std','vitals','crush'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.5],
+  {name:'Call the Doc', icon:'☎️', n:8, time:185, maxActive:3, patience:46, spawnEvery:7, kinds:['std','vitals','crush'], trapRate:.18, pool:['patient','time','route','allergy'], rush:[.5],
    sbar:['A'], events:[{at:.3,id:'R1'},{at:.7,id:'R8'}], ints:['I4'], beat:{who:'jim', line:`My grandson visits tomorrow. Tell him I'm sharp as ever, okay?`},
    tip:`When you call ${DOC}: what's happening, who they are, what you found, what you need. Skip the tomatoes.`},
-  {name:'Flying Solo', icon:'✅', n:9, time:245, maxActive:4, patience:44, spawnEvery:6.5, kinds:['std','vitals','crush'], trapRate:.2, pool:['patient','time','route','allergy'], rush:[.3,.6,.85],
+  {name:'Flying Solo', icon:'✅', n:9, time:185, maxActive:4, patience:44, spawnEvery:6.5, kinds:['std','vitals','crush'], trapRate:.2, pool:['patient','time','route','allergy'], rush:[.3,.6,.85],
    moments:'mix', events:[{at:.3,id:'R3'},{at:.62,id:'R5'}], ints:['I5','I6'], capstone:true,
    beat:{who:'pre', line:`Last orientation shift. Same rules as day one — every check, every time.`}, tip:`No hand-holding tonight. Show them what you've got.`}
 ];
@@ -2107,24 +2144,26 @@ function maybeInterrupt(c){
   after(700, () => { if (!G || G.visit !== c || !G.intq.length) return; showInterrupt(c, G.intq.shift()); });   // only used up once it's actually on screen
 }
 function showInterrupt(c, id){
+  if (sheetEl.querySelector('.intr')) return;
   const I = INTERRUPTS[id], o = document.createElement('div'), isRe = G.intRematch.has(id);
   o.className = 'intr';
   const opts = shuffle([['safe', I.safe], ['unsafe', I.unsafe]]);
   o.innerHTML = `<div class="intr-h">${I.icon} ${isRe ? '🔁 REMATCH · ' : ''}INTERRUPTION!</div><p>${I.text}</p>
     <div class="intr-a">${opts.map(([k, t]) => `<button class="btn ghost" data-k="${k}">${t}</button>`).join('')}</div>`;
-  sheetEl.appendChild(o); sfx.rush(); vib([30,30,30]);
+  sheetEl.scrollTop = 0; sheetEl.scrollLeft = 0; sheetEl.classList.add('locked'); sheetEl.appendChild(o); sfx.rush(); vib([30,30,30]);
+  const close = () => { o.remove(); sheetEl.classList.remove('locked'); };
   o.querySelectorAll('button').forEach(b => b.onclick = () => {
     if (!G.active) return;
     if (b.dataset.k === 'safe'){
       addScore(50); sfx.good(); const p = elCenter(b); floatText('+50 Cool head', 'good', p.x, p.y-20);
       if (isRe) winRematch('m_'+id);
-      mentor(I.coach); o.remove();
+      mentor(I.coach); close();
       if (I.restart) stepRights(c);
     } else {
       addScore(-75); G.streak = 0; renderStreak(); G.stats.slips++; c.slip = true; sfx.bad(); shake();
       logMistake(c, 'm_'+id);
       o.innerHTML = `<div class="intr-h">😬 OOPS</div><p>${I.oops}</p><div class="intr-a"><button class="btn green" id="redo">↩ Restart the check</button></div>`;
-      o.querySelector('#redo').onclick = () => { o.remove(); stepRights(c); };
+      o.querySelector('#redo').onclick = () => { close(); stepRights(c); };
     }
   });
 }
@@ -2248,7 +2287,7 @@ function showStoryIntro(i){
 }
 
 /* ---------- Boot ---------- */
-[IMG.hall, IMG.door, IMG.give].forEach(src => { const i = new Image(); i.src = src; });
+ROSTER.slice(0, 18).forEach(r => { const i = new Image(); i.src = r.portrait; });
 renderMute();
 showTitle();
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !/htmlpreview/.test(location.hostname)) {
