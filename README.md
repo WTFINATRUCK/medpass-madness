@@ -3,6 +3,14 @@
 A mobile-first nursing med-pass time-management game.
 **Play:** https://medpass-madness.vercel.app (backup link: https://htmlpreview.github.io/?https://github.com/WTFINATRUCK/medpass-madness/blob/main/index.html)
 
+## What's new in v3
+- 18 residents and 12 playable nurses from the character sheets; pick your nurse + nickname on first launch
+- Room scene shows the resident you're treating and your nurse
+- Faster bedside check: read the rows, then **Give** or **Hold** (tap the row that's wrong)
+- Foam-in hand hygiene, name + DOB on wristbands, allergy-conflict catches, realistic med times
+- Rush moments, finish-early bonus, in-shift star meter, mood faces on call lights
+- **Daily Shift** (same for everyone, shareable result), daily streak with weekly freeze, experience titles
+
 ## How it plays
 - **Hallway map** – residents ring call lights, each with a patience timer. Tap glowing rooms to queue your route; the nurse walks them in order. Let a timer run out and the resident gives up (−100).
 - **In the room** – pull the right med from the cart, then tap each Right on the bedside check (MAR vs. bedside). **Administer** if everything matches, **🛑 Hold** if something doesn't.
